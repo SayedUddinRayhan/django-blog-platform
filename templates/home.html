@@ -248,154 +248,105 @@
               </svg>
             </a>
          <a class="btn btn-outline-secondary btn-sm me-2 px-3 rounded-3" href="#">
-    Log in
-</a>
-<a class="btn btn-secondary btn-sm px-3 rounded-3 fw-semibold" href="#">
-    Sign up
-</a>
-
-
-
-
-
+                Log in
+            </a>
+            <a class="btn btn-secondary btn-sm px-3 rounded-3 fw-semibold" href="#">
+                Sign up
+            </a>
           </div>
         </div>
       </header>
       <div class="nav-scroller py-1 mb-3 border-bottom">
         <nav class="nav nav-underline justify-content-between">
-          <a class="nav-item nav-link link-body-emphasis active" href="#"
-            >World</a
-          >
-          <a class="nav-item nav-link link-body-emphasis" href="#">U.S.</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#"
-            >Technology</a
-          >
-          <a class="nav-item nav-link link-body-emphasis" href="#">Design</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#">Culture</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#">Business</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#">Politics</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#">Opinion</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#">Science</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#">Health</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#">Style</a>
-          <a class="nav-item nav-link link-body-emphasis" href="#">Travel</a>
+          {% for category in categories %}
+            <a class="nav-item nav-link link-body-emphasis active" href="#"> {{ category.name }}</a>
+          {% endfor %}
         </nav>
       </div>
     </div>
     <main class="container">
-        <div class="p-4 p-md-5 mb-4 rounded position-relative"
-            style="
-              background-image: url('{% static 'images/banner.png' %}');
-              background-size: cover;
-              background-position: center;
-              background-repeat: no-repeat;
-              min-height: 320px;
-            ">
+      {% for post in featured_posts %}
+        {% if forloop.first %}
+            <div class="p-4 p-md-5 mb-4 rounded position-relative"
+                style="
+                  background-image: url('{{ post.featured_image.url }}');
+                  background-size: cover;
+                  background-position: center;
+                  background-repeat: no-repeat;
+                  min-height: 320px;
+                ">
 
-          <!-- Overlay -->
-          <div class="position-absolute top-0 start-0 w-100 h-100 rounded"
-              style="
-                  background: rgba(0, 0, 0, 0.45);
-                  backdrop-filter: blur(3px);
-              ">
-          </div>
+              <!-- Overlay -->
+              <div class="position-absolute top-0 start-0 w-100 h-100 rounded"
+                  style="
+                      background: rgba(0, 0, 0, 0.45);
+                      backdrop-filter: blur(3px);
+                  ">
+              </div>
 
-          <!-- Content -->
-          <div class="col-lg-7 px-0 position-relative text-white" style="z-index: 5;">
-            <h1 class="display-5 fw-bold mb-3">
-              Title of a Longer Featured Blog Post
-            </h1>
-            <p class="lead mb-4">
-              Multiple lines of text that form the lede, informing new readers quickly 
-              and efficiently about what’s most interesting in this post’s contents.
-            </p>
-            <a href="#" class="btn btn-warning fw-semibold px-4 rounded-3">
-              Continue Reading
-            </a>
-          </div>
-        </div>
-    </div>
-        
-      </div>
-      <div class="row mb-2">
-        <div class="col-md-6">
-          <div
-            class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
-          >
-            <div class="col p-4 d-flex flex-column position-static">
-              <strong class="d-inline-block mb-2 text-primary-emphasis"
-                >World</strong
-              >
-              <h3 class="mb-0">Featured post</h3>
-              <div class="mb-1 text-body-secondary">Nov 12</div>
-              <p class="card-text mb-auto">
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content.
-              </p>
-              <a
-                href="#"
-                class="icon-link gap-1 icon-link-hover stretched-link"
-              >
-                Continue reading
-                <svg class="bi" aria-hidden="true">
-                  <use xlink:href="#chevron-right"></use>
-                </svg>
-              </a>
+              <!-- Content -->
+              <div class="col-lg-7 px-0 position-relative text-white" style="z-index: 5;">
+                <h1 class="display-5 fw-bold mb-3">
+                  {{ post.title }}
+                </h1>
+                <p class="lead mb-4">
+                 {{ post.short_description | truncatewords:15 }}
+                </p>
+                <a href="#" class="btn btn-warning fw-semibold px-4 rounded-3">
+                  Continue Reading
+                </a>
+              </div>
             </div>
+       
+        {% endif %}
+    {% endfor %}
+
             
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div
-            class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
-          >
-            <div class="col p-4 d-flex flex-column position-static">
-              <strong class="d-inline-block mb-2 text-success-emphasis"
-                >Design</strong
-              >
-              <h3 class="mb-0">Post title</h3>
-              <div class="mb-1 text-body-secondary">Nov 11</div>
-              <p class="mb-auto">
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content.
-              </p>
-              <a
-                href="#"
-                class="icon-link gap-1 icon-link-hover stretched-link"
-              >
-                Continue reading
-                <svg class="bi" aria-hidden="true">
-                  <use xlink:href="#chevron-right"></use>
-                </svg>
-              </a>
+    <h2 class="fw-bold mb-4" style="font-size:1.8rem; position:relative;">Featured Posts</h2>
+    <div style="width:60px; height:3px; background:#0d6efd; border-radius:5px; margin-top:-12px; margin-bottom:20px;"></div>
+        <div class="row mb-2">
+            {% for post in featured_posts %}
+            {% if not forloop.first %} 
+              <div class="col-md-6">
+                  <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                      <div class="col p-4 d-flex flex-column position-static">
+                          <h3 class="mb-0">{{ post.title }}</h3>
+                          <div class="mb-1 text-body-secondary">{{post.created_at | timesince}} ago | {{post.author}} </div>
+                          <p class="card-text mb-auto">{{ post.short_description | truncatewords:50 }}</p>
+                          <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+                            Continue reading
+                            <svg class="bi" aria-hidden="true">
+                              <use xlink:href="#chevron-right"></use>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
-            
-          </div>
+            {% endif %}
+          {% endfor %}
         </div>
-      </div>
+      
+      <h2 class="fw-bold mb-4" style="font-size:1.8rem; position:relative;">Recent Articles</h2>
       <div class="row g-5">
         <div class="col-md-8">
-          <article class="blog-post">
-            <h2 class="display-5 link-body-emphasis mb-1">Sample blog post</h2>
-            <p class="blog-post-meta">
-              January 1, 2021 by <a href="#">Mark</a>
-            </p>
-            <p>
-              This blog post shows a few different types of content that’s
-              supported and styled with Bootstrap. Basic typography, lists,
-              tables, images, code, and more are all supported as expected.
-            </p>
-            <hr />
-            <p>
-              This is some additional paragraph placeholder content. It has been
-              written to fill the available space and show how a longer snippet
-              of text affects the surrounding content. We'll repeat it often to
-              keep the demonstration flowing, so be on the lookout for this
-              exact same string of text.
-            </p>
-            
-          </article>
-          
+          {% for post in posts %}
+            <article class="blog-post">
+              <h2 class="display-6 link-body-emphasis mb-1">{{ post.title }}</h2>
+              <p class="blog-post-meta">
+                {{ post.created_at }} by <a href="#">{{ post.author }}</a>
+              </p>
+              <p>
+                {{ post.short_description | truncatewords:50 }}
+              </p>
+              <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+                            Continue reading
+                            <svg class="bi" aria-hidden="true">
+                              <use xlink:href="#chevron-right"></use>
+                            </svg>
+                        </a>
+              <hr />
+            </article>
+          {% endfor %}
         </div>
         <div class="col-md-4">
           <div class="position-sticky" style="top: 2rem">
@@ -407,88 +358,12 @@
                 Totally up to you.
               </p>
             </div>
-            {% comment %} <div>
-              <h4 class="fst-italic">Recent posts</h4>
-              <ul class="list-unstyled">
-                <li>
-                  <a
-                    class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                    href="#"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="bd-placeholder-img"
-                      height="96"
-                      preserveAspectRatio="xMidYMid slice"
-                      width="100%"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect width="100%" height="100%" fill="#777"></rect>
-                    </svg>
-                    <div class="col-lg-8">
-                      <h6 class="mb-0">Example blog post title</h6>
-                      <small class="text-body-secondary"
-                        >January 15, 2024</small
-                      >
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                    href="#"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="bd-placeholder-img"
-                      height="96"
-                      preserveAspectRatio="xMidYMid slice"
-                      width="100%"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect width="100%" height="100%" fill="#777"></rect>
-                    </svg>
-                    <div class="col-lg-8">
-                      <h6 class="mb-0">This is another blog post title</h6>
-                      <small class="text-body-secondary"
-                        >January 14, 2024</small
-                      >
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
-                    href="#"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="bd-placeholder-img"
-                      height="96"
-                      preserveAspectRatio="xMidYMid slice"
-                      width="100%"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect width="100%" height="100%" fill="#777"></rect>
-                    </svg>
-                    <div class="col-lg-8">
-                      <h6 class="mb-0">
-                        Longer blog post title: This one has multiple lines!
-                      </h6>
-                      <small class="text-body-secondary"
-                        >January 13, 2024</small
-                      >
-                    </div>
-                  </a>
-                </li>
-              </ul>
-            </div> {% endcomment %}
             
             <div class="p-4">
               <h4 class="fst-italic">Follow Me</h4>
               <ol class="list-unstyled">
-                <li><a href="#">GitHub</a></li>
-                <li><a href="#">LinkedIn</a></li>
+                <li><a href="https://github.com/SayedUddinRayhan/">GitHub</a></li>
+                <li><a href="https://www.linkedin.com/in/md-sayed-uddin/">LinkedIn</a></li>
                 <li><a href="#">Facebook</a></li>
               </ol>
             </div>
