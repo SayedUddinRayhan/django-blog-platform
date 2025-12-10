@@ -1,10 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from .models import Category, BlogPost
 
 class HomeView(View):
     def get(self, request):
-
         categoriesQ = Category.objects.all()
         featured_postsQ = BlogPost.objects.filter(is_featured=True, status='published').order_by('-updated_at')
         posts = BlogPost.objects.filter(is_featured=False, status='published').order_by('-updated_at')
@@ -19,12 +18,24 @@ class HomeView(View):
 
 class CategoryView(View):
     def get(self, request, category_id):
-        postsQ = BlogPost.objects.filter(status='published', category=category_id)
-        category_id = Category.objects.get(id=category_id)
+
+        # category_id = Category.objects.get(id=category_id)
+        # category = get_object_or_404(Category, id=category_id)
+
+        # try:
+        #     category = Category.objects.get(id=category_id)
+        # except Category.DoesNotExist:
+        #     return redirect('home')
+        
+        category = get_object_or_404(Category, id=category_id)
+
         categoriesQ = Category.objects.all()
+
+        postsQ = BlogPost.objects.filter(status='published', category=category).select_related('category').order_by('-updated_at') 
+       
         context = {
             'posts': postsQ,
-            'category': category_id,
+            'category': category,
             'categories': categoriesQ,
         }
         return render(request, 'category.html', context)
