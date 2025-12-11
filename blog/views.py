@@ -4,11 +4,12 @@ from .models import Category, BlogPost
 
 class HomeView(View):
     def get(self, request):
-        categoriesQ = Category.objects.all()
+        # I have created a context processor to get all categories
+        # categoriesQ = Category.objects.all()
         featured_postsQ = BlogPost.objects.filter(is_featured=True, status='published').order_by('-updated_at')
         posts = BlogPost.objects.filter(is_featured=False, status='published').order_by('-updated_at')
         context = {
-            'categories': categoriesQ,
+            # 'categories': categoriesQ,
             'featured_posts': featured_postsQ,
             'posts': posts,
         }
@@ -29,13 +30,14 @@ class CategoryView(View):
         
         category = get_object_or_404(Category, id=category_id)
 
-        categoriesQ = Category.objects.all()
+        # I have created a context processor to get all categories
+        # categoriesQ = Category.objects.all()
 
         postsQ = BlogPost.objects.filter(status='published', category=category).select_related('category').order_by('-updated_at') 
        
         context = {
             'posts': postsQ,
             'category': category,
-            'categories': categoriesQ,
+            # 'categories': categoriesQ,
         }
         return render(request, 'category.html', context)
