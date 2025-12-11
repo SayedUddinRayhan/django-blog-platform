@@ -41,3 +41,12 @@ class CategoryView(View):
             # 'categories': categoriesQ,
         }
         return render(request, 'category.html', context)
+    
+class BlogPostDetailView(View):
+    def get(self, request, slug):
+        post = get_object_or_404(BlogPost, slug=slug, status='published')
+
+        context = {
+            'post': post,
+        }
+        return render(request, 'blogpost_detail.html', context)

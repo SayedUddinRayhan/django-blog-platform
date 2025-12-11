@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ post.title }} | The Sayed Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-12">
+
+    <!-- Featured Image -->
+    {% if post.featured_image %}
+    <figure class="mb-5">
+      <img src="{{ post.featured_image.url }}"
+           class="img-fluid rounded-4 shadow"
+           alt="{{ post.title }}"
+           style="width: 100%; max-height: 480px; object-fit: cover;">
+    </figure>
+    {% endif %}
+
+    <!-- Post Header -->
+    <header class="mb-4 pb-3 border-bottom">
+      <h1 class="display-5 fw-bold mb-3 text-body-emphasis">
+        {{ post.title }}
+      </h1>
+
+      <div class="text-muted small">
+        Published by <strong>{{ post.author.get_full_name|default:post.author.username }}</strong> on <span class="fw-semibold">{{ post.created_at|date:"F d, Y" }}</span>
+
+        {% if post.category %}
+        in <a href="{% url 'category_view' post.category.id %}" class="fw-semibold text-decoration-none">
+            {{ post.category.name }}
+        </a>
+        {% endif %}
+
+      </div>
+
+      {% if post.short_description %}
+      <p class="lead mt-4 text-secondary" style="text-align: justify; text-justify: inter-word;">{{ post.short_description|safe }}</p>
+      {% endif %}
+    </header>
+
+    <!-- Blog Content -->
+    <div class="blog-content fs-5 lh-lg" style="text-align: justify; text-justify: inter-word;">
+      {{ post.blog_body|safe }}
+    </div>
+
+
+    <!-- Bottom Navigation -->
+    <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+      <a href="{% url 'home' %}" class="btn btn-outline-secondary d-flex align-items-center px-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+             class="bi bi-arrow-left me-2" fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 
+                0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 
+                0 0 0 15 8z"/>
+        </svg>
+        Back to Home
+      </a>
+
+      <button class="btn btn-primary shadow-sm px-4">
+        Share This Post
+      </button>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
