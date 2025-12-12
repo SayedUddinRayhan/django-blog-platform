@@ -87,9 +87,13 @@
               </button>
             </form>
 
-            <a class="btn btn-outline-secondary btn-sm px-3 rounded-3" href="#">Log in</a>
-            <a class="btn btn-secondary btn-sm px-3 rounded-3 fw-semibold" href="#">Sign up</a>
-
+            {% if user.is_authenticated %}
+                <span class="me-2">Hello, {{ user.get_full_name|default:user.username }}</span>
+               <a class="btn btn-outline-secondary btn-sm px-3 rounded-3" href="{% url 'logout' %}">Log out</a>
+            {% else %}
+              <a class="btn btn-outline-secondary btn-sm px-3 rounded-3" href="{% url 'login' %}">Log in</a>
+              <a class="btn btn-secondary btn-sm px-3 rounded-3 fw-semibold" href="{% url 'register' %}">Register</a>
+            {% endif %}
           </div>
 
         </div>

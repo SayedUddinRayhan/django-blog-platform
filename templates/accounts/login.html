@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-5">
+
+        <div class="p-4 p-md-5 rounded-4 shadow-lg bg-body">
+            <h2 class="fw-bold mb-4 text-center fs-3">Login</h2>
+            <form action="{% url 'login' %}" method="post" novalidate>
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button type="submit" class="btn btn-primary mt-3 w-100">Login</button>
+            </form>
+
+            <p class="text-center mt-3 mb-0">
+                Don't have an account?
+                <a href="{% url 'register' %}" class="text-decoration-none">
+                    Register
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Password Toggle Script -->
+<script>
+document.getElementById("togglePassword").addEventListener("click", function () {
+    const passwordField = document.getElementById("id_password");
+    const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+    passwordField.setAttribute("type", type);
+
+    this.textContent = type === "password" ? "Show" : "Hide";
+});
+</script>
+
+{% endblock %}

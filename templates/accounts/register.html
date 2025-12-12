@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-5">
+
+        <div class="p-4 p-md-5 rounded-4 shadow-lg bg-body">
+            <h2 class="fw-bold mb-4 text-center fs-3">Register</h2>
+
+            <form action="{% url 'register' %}" method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <button type="submit" class="btn btn-primary mt-3 w-100">
+                    Register
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <p class="text-center mt-3 mb-0">
+                Already have an account?
+                <a href="{% url 'login' %}" class="text-decoration-none">
+                    Login
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

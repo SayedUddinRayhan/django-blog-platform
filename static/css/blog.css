@@ -38,8 +38,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #727272;
 }
 
-.blog-content * {
-    text-align: justify !important;
-    text-justify: inter-word !important;
-}
 
+#id_password {
+    padding-right: 3rem; 
+}
