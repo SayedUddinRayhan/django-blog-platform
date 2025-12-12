@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from .models import Category, BlogPost
+from .models import Category, BlogPost, About, FollowUs
 
 class HomeView(View):
     def get(self, request):
@@ -8,10 +8,14 @@ class HomeView(View):
         # categoriesQ = Category.objects.all()
         featured_postsQ = BlogPost.objects.filter(is_featured=True, status='published').order_by('-updated_at')
         posts = BlogPost.objects.filter(is_featured=False, status='published').order_by('-updated_at')
+        about_infoQ = About.objects.first()
+        follow_usQ = FollowUs.objects.all()
         context = {
             # 'categories': categoriesQ,
             'featured_posts': featured_postsQ,
             'posts': posts,
+            'about_info': about_infoQ,
+            'follow_us': follow_usQ,
         }
 
         return render(request, 'home.html', context)

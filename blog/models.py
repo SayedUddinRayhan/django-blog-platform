@@ -29,3 +29,27 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+    
+class About(models.Model):
+    about_heading = models.TextField(max_length=20)
+    about_content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "About"
+
+    def __str__(self):
+        return self.about_heading
+    
+class FollowUs(models.Model):
+    platform_name = models.CharField(max_length=50)
+    platform_url = models.URLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "Follow Us"
+
+    def __str__(self):
+        return self.platform_name

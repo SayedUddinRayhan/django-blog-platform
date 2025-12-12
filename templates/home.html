@@ -33,13 +33,9 @@
               <div class="col-md-6">
                 <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                   <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0">{{ post.title }}</h3>
+                    <h3 class="mb-0"><a href="{% url 'blogpost_detail' slug=post.slug %}">{{ post.title }}</a></h3>
                     <div class="mb-1 text-body-secondary">{{ post.created_at|timesince }} ago | {{ post.author }}</div>
                     <p class="card-text mb-auto">{{ post.short_description|truncatewords:50 }}</p>
-                    <a href="{% url 'blogpost_detail' slug=post.slug %}" class="icon-link gap-1 icon-link-hover">
-                      Continue reading
-                      <svg class="bi" aria-hidden="true"><use xlink:href="#chevron-right"></use></svg>
-                    </a>
                   </div>
                 </div>
               </div>
@@ -58,13 +54,9 @@
       {% if posts %}
         {% for post in posts %}
           <article class="blog-post mb-4">
-            <h3 class="blog-post-title mb-1">{{ post.title }}</h3>
+            <h3 class="blog-post-title mb-1"><a href="{% url 'blogpost_detail' slug=post.slug %}">{{ post.title }}</a></h3>
             <p class="blog-post-meta">{{ post.created_at|date:"F j, Y" }} by {{ post.author }}</p>
             <p>{{ post.short_description|truncatewords:100 }}</p>
-            <a href="{% url 'blogpost_detail' slug=post.slug %}" class="icon-link gap-1 icon-link-hover">
-              Continue reading
-              <svg class="bi" aria-hidden="true"><use xlink:href="#chevron-right"></use></svg>
-            </a>
           </article>
         {% endfor %}
       {% else %}
@@ -75,15 +67,15 @@
     <div class="col-md-4">
       <div class="position-sticky" style="top: 2rem">
         <div class="p-4 mb-3 bg-body-tertiary rounded">
-          <h4 class="fst-italic">About</h4>
-          <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely.</p>
+          <h4 class="fst-italic">{{ about_info.about_heading }}</h4>
+          <p class="mb-0">{{ about_info.about_content }}</p>
         </div>
         <div class="p-4">
           <h4 class="fst-italic">Follow Me</h4>
           <ol class="list-unstyled">
-            <li><a href="https://github.com/SayedUddinRayhan/">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/md-sayed-uddin/">LinkedIn</a></li>
-            <li><a href="#">Facebook</a></li>
+            {% for item in follow_us %}
+              <li><a href="{{ item.platform_url }}" target="_blank" rel="noopener noreferrer">{{ item.platform_name }}</a></li>
+            {% endfor %}
           </ol>
         </div>
       </div>
