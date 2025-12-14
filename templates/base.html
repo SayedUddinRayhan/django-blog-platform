@@ -88,12 +88,37 @@
             </form>
 
             {% if user.is_authenticated %}
-                <span class="me-2">Hello, {{ user.get_full_name|default:user.username }}</span>
-               <a class="btn btn-outline-secondary btn-sm px-3 rounded-3" href="{% url 'logout' %}">Log out</a>
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle px-3 rounded-3"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                  {{ user.get_full_name|default:user.username }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                  <li>
+                    <a class="dropdown-item" href="{% url 'dashboard' %}">
+                      Dashboard
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">
+                      Profile
+                    </a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                      Log out
+                    </a>
+                  </li>
+                </ul>
+              </div>
             {% else %}
               <a class="btn btn-outline-secondary btn-sm px-3 rounded-3" href="{% url 'login' %}">Log in</a>
               <a class="btn btn-secondary btn-sm px-3 rounded-3 fw-semibold" href="{% url 'register' %}">Register</a>
             {% endif %}
+
           </div>
 
         </div>

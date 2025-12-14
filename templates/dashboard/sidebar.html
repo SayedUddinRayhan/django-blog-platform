@@ -1,0 +1,35 @@
+<!-- Sidebar -->
+  <aside class="col-md-3 col-lg-2">
+    <div class="card shadow-sm rounded-3">
+      <div class="card-body p-3">
+        <h6 class="text-uppercase text-muted mb-3">Management</h6>
+
+        <ul class="nav flex-column gap-1">
+
+            <li class="nav-item">
+                <a href="{% url 'dashboard' %}"
+                    class="nav-link link-body-emphasis {% if request.resolver_match.url_name == 'dashboard' %}active fw-semibold{% endif %}">
+                    Dashboard
+                </a>
+
+             </li>
+
+          <li class="nav-item">
+            <a href="{% url 'categories' %}"
+                    class="nav-link link-body-emphasis {% if request.resolver_match.url_name == 'categories' %}active fw-semibold{% endif %}">
+                    Categories
+                </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#" class="nav-link link-body-emphasis">
+                Blogs
+            </a>
+          </li>
+
+          
+
+        </ul>
+      </div>
+    </div>
+  </aside>
