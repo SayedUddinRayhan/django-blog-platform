@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Add Category{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  {% include 'dashboard/sidebar.html' %}
+
+  <!-- Main Content -->
+  <section class="col-md-9 col-lg-10">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+      <h2 class="fw-semibold mb-1">Add Category</h2>
+      <p class="text-muted mb-0">
+        Create a new blog category.
+      </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card shadow-sm rounded-3" style="max-width: 520px;">
+      <div class="card-body">
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Category Name -->
+          <div class="mb-3">
+            <label class="form-label fw-medium">
+              {{ form.name.label }}
+            </label>
+
+            {{ form.name }}
+
+            {% if form.name.errors %}
+              <div class="invalid-feedback d-block">
+                {{ form.name.errors|striptags }}
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Actions -->
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              Create Category
+            </button>
+
+            <a href="{% url 'categories' %}" class="btn btn-outline-secondary">
+              Cancel
+            </a>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  </section>
+</div>
+{% endblock %}

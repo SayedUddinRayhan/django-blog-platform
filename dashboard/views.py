@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from blog.models import Category, BlogPost
 from django.contrib.auth.models import User
-
+from .forms import CategoryForm
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
@@ -23,8 +23,34 @@ class DashboardView(LoginRequiredMixin, View):
     
 class CategoriesView(LoginRequiredMixin, View):
     def get(self, request):
-        categories = Category.objects.all()
+        # Context Processor theke categories niye aschi, tai ekhane ar lagbe na
+        return render(request, 'dashboard/categories.html')
+
+class AddCategoryView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = CategoryForm()
+       
         context = {
-            'categories': categories,
+            'form': form,
         }
-        return render(request, 'dashboard/categories.html', context)
+
+        return render(request, 'dashboard/add_category.html', context)
+    
+    def post(self, request):
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
+        
+        context = {
+            'form': form,
+        }
+        return render(request, 'dashboard/add_category.html', context)
+
+class BlogPostsView(LoginRequiredMixin, View):
+    def get(self, request):
+        posts = BlogPost.objects.all()
+        context = {
+            'posts': posts,
+        }
+        return render(request, 'dashboard/blogposts.html', context)

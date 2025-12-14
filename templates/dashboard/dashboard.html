@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="row g-4">
+<div class="row g-4 mb-4">
 
   {% include 'dashboard/sidebar.html' %}
 
@@ -16,22 +16,22 @@
     </div>
 
     <!-- Stats -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3">
 
       <div class="col-md-4 col-lg-6">
         <div class="card shadow-sm rounded-3">
-          <div class="card-body">
-            <h6 class="text-muted text-center">Categories</h6>
-            <h3 class="fw-bold text-center">{{ total_categories }}</h3>
+          <div class="card-body text-center">
+            <h6 class="text-muted">Categories</h6>
+            <h3 class="fw-bold">{{ total_categories }}</h3>
           </div>
         </div>
       </div>
 
       <div class="col-md-4 col-lg-6">
         <div class="card shadow-sm rounded-3">
-          <div class="card-body">
-            <h6 class="text-muted text-center">Blog Posts</h6>
-            <h3 class="fw-bold text-center">{{ total_posts }}</h3>
+          <div class="card-body text-center">
+            <h6 class="text-muted">Blog Posts</h6>
+            <h3 class="fw-bold">{{ total_posts }}</h3>
           </div>
         </div>
       </div>
