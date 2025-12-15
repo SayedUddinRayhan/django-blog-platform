@@ -1,5 +1,15 @@
 from django.urls import path
-from .views import DashboardView, CategoriesView, BlogPostsView, AddCategoryView, EditCategoryView, DeleteCategoryView, AddBlogPostView
+from .views import (
+    DashboardView, 
+    CategoriesView, 
+    BlogPostsView, 
+    AddCategoryView, 
+    EditCategoryView, 
+    DeleteCategoryView, 
+    AddBlogPostView, 
+    EditBlogPostView, 
+    DeleteBlogPostView,
+    )
 
 
 urlpatterns = [
@@ -10,4 +20,6 @@ urlpatterns = [
     path('categories/delete/<int:pk>/', DeleteCategoryView.as_view(), name='delete_category'),
     path('blogposts/', BlogPostsView.as_view(), name='blogposts'),
     path('blogposts/add/', AddBlogPostView.as_view(), name='add_blogpost'),
+    path('blogposts/edit/<int:pk>/', EditBlogPostView.as_view(), name='edit_blogpost'),
+    path('blogposts/delete/<int:pk>/', DeleteBlogPostView.as_view(), name='delete_blogpost'),
 ]

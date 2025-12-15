@@ -109,3 +109,34 @@ class AddBlogPostView(LoginRequiredMixin, View):
             'form': form,
         }
         return render(request, 'dashboard/add_blogpost.html', context)
+    
+class EditBlogPostView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        blog_post = get_object_or_404(BlogPost, pk=pk)
+        form = BlogPostForm(instance=blog_post)
+       
+        context = {
+            'form': form,
+            'blog_post': blog_post,
+        }
+
+        return render(request, 'dashboard/edit_blogpost.html', context)
+    
+    def post(self, request, pk):
+        blog_post = get_object_or_404(BlogPost, pk=pk)
+        form = BlogPostForm(request.POST, request.FILES, instance=blog_post)
+        if form.is_valid():
+            form.save()
+            return redirect('blogposts')
+        
+        context = {
+            'form': form,
+            'blog_post': blog_post,
+        }
+        return render(request, 'dashboard/edit_blogpost.html', context)
+    
+class DeleteBlogPostView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        blog_post = get_object_or_404(BlogPost, pk=pk)
+        blog_post.delete()
+        return redirect('blogposts')
