@@ -2,7 +2,7 @@
 {% block title %}Add Category{% endblock %}
 
 {% block content %}
-<div class="row g-4">
+<div class="row g-4 mb-4">
 
   {% include 'dashboard/sidebar.html' %}
 
@@ -12,9 +12,6 @@
     <!-- Page Header -->
     <div class="mb-4">
       <h2 class="fw-semibold mb-1">Add Category</h2>
-      <p class="text-muted mb-0">
-        Create a new blog category.
-      </p>
     </div>
 
     <!-- Form Card -->
@@ -42,7 +39,7 @@
           <!-- Actions -->
           <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">
-              Create Category
+              Create
             </button>
 
             <a href="{% url 'categories' %}" class="btn btn-outline-secondary">

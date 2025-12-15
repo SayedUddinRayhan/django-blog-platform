@@ -3,7 +3,9 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from blog.models import Category, BlogPost
 from django.contrib.auth.models import User
-from .forms import CategoryForm
+from .forms import CategoryForm, BlogPostForm
+
+
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
@@ -54,3 +56,26 @@ class BlogPostsView(LoginRequiredMixin, View):
             'posts': posts,
         }
         return render(request, 'dashboard/blogposts.html', context)
+    
+class AddBlogPostView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = BlogPostForm()
+       
+        context = {
+            'form': form,
+        }
+
+        return render(request, 'dashboard/add_blogpost.html', context)
+    
+    def post(self, request):
+        form = BlogPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            blog_post = form.save(commit=False) 
+            blog_post.author = request.user      
+            blog_post.save()                   
+            return redirect('blogposts')
+        
+        context = {
+            'form': form,
+        }
+        return render(request, 'dashboard/add_blogpost.html', context)
