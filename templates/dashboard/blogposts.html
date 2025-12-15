@@ -19,7 +19,8 @@
       </div>
 
       <a href="{% url 'add_blogpost' %}" class="btn btn-sm btn-primary">
-        Add New Post
+        <i class="bi bi-plus-circle me-1"></i>
+        Add Post
       </a>
     </div>
 
@@ -63,15 +64,11 @@
                     </span>
                   {% endif %}
                 </td>
-                <td>
+                <td class="text-center">
                   {% if post.is_featured %}
-                    <span class="badge bg-warning-subtle text-warning">
-                      Featured
-                    </span>
+                    <i class="bi bi-check-circle-fill text-success"></i>
                   {% else %}
-                    <span class="badge bg-secondary-subtle text-secondary">
-                      Not Featured
-                    </span>
+                    <i class="bi bi-x-circle-fill text-danger"></i>
                   {% endif %}
                 </td>
                 <td class="text-end">

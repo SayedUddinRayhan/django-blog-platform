@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+
+  {% include 'dashboard/sidebar.html' %}
+
+  <!-- Main Content -->
+  <section class="col-md-9 col-lg-10">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+      <h2 class="fw-semibold mb-1">Add User</h2>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card shadow-sm rounded-3" style="max-width: 520px;">
+      <div class="card-body">
+
+        <form action="{% url 'add_user' %}" method="post" novalidate>
+          {% csrf_token %}
+
+          {{ form | crispy }}
+
+          <!-- Actions -->
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              Create
+            </button>
+
+            <a href="{% url 'user_management' %}" class="btn btn-outline-secondary">
+              Cancel
+            </a>
+            </div>
+        </form>
+        </div>
+    </div>
+    </section>
+</div>
+{% endblock %}

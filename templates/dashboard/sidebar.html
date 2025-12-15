@@ -13,6 +13,11 @@
                 </a>
 
              </li>
+             <li class="nav-item">
+                <a href="{% url 'user_management' %}"
+                    class="nav-link link-body-emphasis {% if request.resolver_match.url_name == 'user_management' %}active fw-semibold{% endif %}">
+                    Users
+                </a>
 
           <li class="nav-item">
             <a href="{% url 'categories' %}"
