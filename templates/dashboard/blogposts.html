@@ -31,12 +31,13 @@
           <table class="table table-hover align-middle mb-0">
             <thead class="border-bottom">
               <tr>
-                <th style="width: 60px;">SN</th>
+                <th>SN</th>
                 <th>Title</th>
-                <th style="width: 160px;">Category</th>
-                <th style="width: 120px;">Status</th>
-                <th style="width: 140px;">Updated</th>
-                <th style="width: 160px;" class="text-end">Actions</th>
+                <th>Category</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Featured</th>
+                <th class="text-end">Actions</th>
               </tr>
             </thead>
 
@@ -45,11 +46,11 @@
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
 
-                <td class="text-truncate" style="max-width: 320px;">
+                <td class="text-truncate" style="max-width: 280px;">
                   {{ post.title }}
                 </td>
-
                 <td>{{ post.category.name }}</td>
+                <td>{{ post.author }}</td>
 
                 <td>
                   {% if post.status == 'published' %}
@@ -62,9 +63,17 @@
                     </span>
                   {% endif %}
                 </td>
-
-                <td>{{ post.updated_at|date:"M d, Y" }}</td>
-
+                <td>
+                  {% if post.is_featured %}
+                    <span class="badge bg-warning-subtle text-warning">
+                      Featured
+                    </span>
+                  {% else %}
+                    <span class="badge bg-secondary-subtle text-secondary">
+                      Not Featured
+                    </span>
+                  {% endif %}
+                </td>
                 <td class="text-end">
                   <a href="#" class="btn btn-sm btn-outline-primary me-1">
                     Edit

@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from blog.models import Category, BlogPost
 from django.contrib.auth.models import User
 from .forms import CategoryForm, BlogPostForm
-
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
@@ -49,9 +48,40 @@ class AddCategoryView(LoginRequiredMixin, View):
         }
         return render(request, 'dashboard/add_category.html', context)
 
+class EditCategoryView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        category = get_object_or_404(Category, pk=pk)
+        form = CategoryForm(instance=category)
+       
+        context = {
+            'form': form,
+            'category': category,
+        }
+
+        return render(request, 'dashboard/edit_category.html', context)
+    
+    def post(self, request, pk):
+        category = get_object_or_404(Category, pk=pk)
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
+        
+        context = {
+            'form': form,
+            'category': category,
+        }
+        return render(request, 'dashboard/edit_category.html', context)
+
+class DeleteCategoryView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        category = get_object_or_404(Category, pk=pk)
+        category.delete()
+        return redirect('categories')
+
 class BlogPostsView(LoginRequiredMixin, View):
     def get(self, request):
-        posts = BlogPost.objects.all()
+        posts = BlogPost.objects.all().order_by('-updated_at')
         context = {
             'posts': posts,
         }

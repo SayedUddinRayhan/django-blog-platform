@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}Add Blog Post{% endblock %}
 
 {% block content %}
@@ -14,79 +15,17 @@
 
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
+                        {{ form | crispy }}
 
-                        <!-- Title -->
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                            {{ form.title }}
-                            {% if form.title.errors %}
-                                <small class="text-danger">{{ form.title.errors }}</small>
-                            {% endif %}
-                        </div>
-
-                        <!-- Category -->
-                        <div class="mb-3">
-                            <label class="form-label">Category</label>
-                            {{ form.category }}
-                            {% if form.category.errors %}
-                                <small class="text-danger">{{ form.category.errors }}</small>
-                            {% endif %}
-                        </div>
-
-                        <!-- Featured Image -->
-                        <div class="mb-3">
-                            <label class="form-label">Featured Image</label>
-                            {{ form.featured_image }}
-                            {% if form.featured_image.errors %}
-                                <small class="text-danger">{{ form.featured_image.errors }}</small>
-                            {% endif %}
-                        </div>
-
-                        <!-- Short Description -->
-                        <div class="mb-3">
-                            <label class="form-label">Short Description</label>
-                            {{ form.short_description }}
-                            {% if form.short_description.errors %}
-                                <small class="text-danger">{{ form.short_description.errors }}</small>
-                            {% endif %}
-                        </div>
-
-                        <!-- Blog Body -->
-                        <div class="mb-3">
-                            <label class="form-label">Blog Content</label>
-                            {{ form.blog_body }}
-                            {% if form.blog_body.errors %}
-                                <small class="text-danger">{{ form.blog_body.errors }}</small>
-                            {% endif %}
-                        </div>
-
-                        <!-- Status -->
-                        <div class="mb-3">
-                            <label class="form-label">Status</label>
-                            {{ form.status }}
-                            {% if form.status.errors %}
-                                <small class="text-danger">{{ form.status.errors }}</small>
-                            {% endif %}
-                        </div>
-
-                        <!-- Featured -->
-                        <div class="mb-3 form-check">
-                            {{ form.is_featured }}
-                            <label class="form-check-label">
-                                Featured Post
-                            </label>
-                        </div>
-
-                        <!-- Submit -->
-                        <div class="mt-4">
+                        <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
-                                Publish Post
+                            Create
                             </button>
-                            <a href="{% url 'blogposts' %}" class="btn btn-secondary">
-                                Cancel
+
+                            <a href="{% url 'blogposts' %}" class="btn btn-outline-secondary">
+                            Cancel
                             </a>
                         </div>
-
                     </form>
 
                 </div>
