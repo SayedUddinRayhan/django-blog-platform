@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from blog.models import Category, BlogPost
 from django.contrib.auth.models import User
 from .forms import CategoryForm, BlogPostForm, DashboardAddUserForm, DashboardUserEditForm
+
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
@@ -22,12 +23,14 @@ class DashboardView(LoginRequiredMixin, View):
 
         return render(request, 'dashboard/dashboard.html', context)
     
-class CategoriesView(LoginRequiredMixin, View):
+class CategoriesView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.view_category'
     def get(self, request):
         # Context Processor theke categories niye aschi, tai ekhane ar lagbe na
         return render(request, 'dashboard/categories.html')
 
-class AddCategoryView(LoginRequiredMixin, View):
+class AddCategoryView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.add_category'
     def get(self, request):
         form = CategoryForm()
        
@@ -48,7 +51,8 @@ class AddCategoryView(LoginRequiredMixin, View):
         }
         return render(request, 'dashboard/add_category.html', context)
 
-class EditCategoryView(LoginRequiredMixin, View):
+class EditCategoryView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.change_category'
     def get(self, request, pk):
         category = get_object_or_404(Category, pk=pk)
         form = CategoryForm(instance=category)
@@ -73,13 +77,15 @@ class EditCategoryView(LoginRequiredMixin, View):
         }
         return render(request, 'dashboard/edit_category.html', context)
 
-class DeleteCategoryView(LoginRequiredMixin, View):
+class DeleteCategoryView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.delete_category'
     def post(self, request, pk):
         category = get_object_or_404(Category, pk=pk)
         category.delete()
         return redirect('categories')
 
-class BlogPostsView(LoginRequiredMixin, View):
+class BlogPostsView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.view_blogpost'
     def get(self, request):
         posts = BlogPost.objects.all().order_by('-updated_at')
         context = {
@@ -87,7 +93,8 @@ class BlogPostsView(LoginRequiredMixin, View):
         }
         return render(request, 'dashboard/blogposts.html', context)
     
-class AddBlogPostView(LoginRequiredMixin, View):
+class AddBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.add_blogpost'
     def get(self, request):
         form = BlogPostForm()
        
@@ -110,9 +117,14 @@ class AddBlogPostView(LoginRequiredMixin, View):
         }
         return render(request, 'dashboard/add_blogpost.html', context)
     
-class EditBlogPostView(LoginRequiredMixin, View):
+class EditBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.change_blogpost'
     def get(self, request, pk):
         blog_post = get_object_or_404(BlogPost, pk=pk)
+
+        if request.user.groups.filter(name='Author').exists() and blog_post.author != request.user:
+            return redirect('blogposts')
+        
         form = BlogPostForm(instance=blog_post)
        
         context = {
@@ -124,6 +136,10 @@ class EditBlogPostView(LoginRequiredMixin, View):
     
     def post(self, request, pk):
         blog_post = get_object_or_404(BlogPost, pk=pk)
+
+        if request.user.groups.filter(name='Author').exists() and blog_post.author != request.user:
+            return redirect('blogposts')
+
         form = BlogPostForm(request.POST, request.FILES, instance=blog_post)
         if form.is_valid():
             form.save()
@@ -135,14 +151,16 @@ class EditBlogPostView(LoginRequiredMixin, View):
         }
         return render(request, 'dashboard/edit_blogpost.html', context)
     
-class DeleteBlogPostView(LoginRequiredMixin, View):
+class DeleteBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.delete_blogpost'
     def post(self, request, pk):
         blog_post = get_object_or_404(BlogPost, pk=pk)
         blog_post.delete()
         return redirect('blogposts')
 
 
-class UserManagementView(LoginRequiredMixin, View):
+class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'auth.view_user'
     def get(self, request):
         users = User.objects.all()
 
@@ -151,7 +169,8 @@ class UserManagementView(LoginRequiredMixin, View):
         }
         return render(request, 'dashboard/user_management.html', context)
     
-class AddUserView(LoginRequiredMixin, View):
+class AddUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'auth.add_user'
     def get(self, request):
         form = DashboardAddUserForm()
        
@@ -173,7 +192,8 @@ class AddUserView(LoginRequiredMixin, View):
         return render(request, 'dashboard/add_user.html', context)
 
 
-class EditUserView(LoginRequiredMixin, View):
+class EditUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'auth.change_user'
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         form = DashboardUserEditForm(instance=user)
@@ -198,7 +218,8 @@ class EditUserView(LoginRequiredMixin, View):
         }
         return render(request, 'dashboard/edit_user.html', context)
     
-class DeleteUserView(LoginRequiredMixin, View):
+class DeleteUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'auth.delete_user'
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         user.delete()
