@@ -11,6 +11,22 @@ class BlogPostAdmin(GuardedModelAdmin):
     list_editable = ('is_featured',)
 
 
+    # Superuser chara onno user jodi admin theke blog post add or edit kore tahole author field ta disabled thakbe
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+
+        if not request.user.is_superuser:
+            # Author cannot change author field
+            form.base_fields['author'].disabled = True
+
+        return form
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.author = request.user  # enforce ownership
+        obj.save()
+
+
 # -------- SINGLETON ABOUT ADMIN --------
 class AboutAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
