@@ -1,3 +1,4 @@
+from guardian.shortcuts import assign_perm, get_objects_for_user
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -8,17 +9,13 @@ from .forms import CategoryForm, BlogPostForm, DashboardAddUserForm, DashboardUs
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
-        user = request.user
-
         context = {
             'total_categories': Category.objects.count(),
             'total_posts': BlogPost.objects.count(),
             'published_posts': BlogPost.objects.filter(status='published').count(),
-            'is_manager': user.groups.filter(name='Manager').exists(),
-            'is_editor': user.groups.filter(name='Editor').exists(),
         }
 
-        if context['is_manager']:
+        if request.user.has_perm('auth.view_user'):
             context['total_users'] = User.objects.count()
 
         return render(request, 'dashboard/dashboard.html', context)
@@ -84,17 +81,15 @@ class DeleteCategoryView(LoginRequiredMixin, PermissionRequiredMixin, View):
         category.delete()
         return redirect('categories')
 
-class BlogPostsView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = 'blog.view_blogpost'
+class BlogPostsView(LoginRequiredMixin, View):
     def get(self, request):
-        posts = BlogPost.objects.all().order_by('-updated_at')
+        posts = get_objects_for_user(request.user, 'blog.view_blogpost', BlogPost, accept_global_perms=False)
         context = {
             'posts': posts,
         }
         return render(request, 'dashboard/blogposts.html', context)
     
-class AddBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = 'blog.add_blogpost'
+class AddBlogPostView(LoginRequiredMixin, View):
     def get(self, request):
         form = BlogPostForm()
        
@@ -109,7 +104,13 @@ class AddBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if form.is_valid():
             blog_post = form.save(commit=False) 
             blog_post.author = request.user      
-            blog_post.save()                   
+            blog_post.save()
+
+            assign_perm('blog.view_blogpost', request.user, blog_post)
+            assign_perm('blog.change_blogpost', request.user, blog_post)
+            assign_perm('blog.delete_blogpost', request.user, blog_post)
+
+
             return redirect('blogposts')
         
         context = {
@@ -120,11 +121,8 @@ class AddBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
 class EditBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'blog.change_blogpost'
     def get(self, request, pk):
-        blog_post = get_object_or_404(BlogPost, pk=pk)
+        blog_post = get_object_or_404(get_objects_for_user(request.user, 'blog.change_blogpost', BlogPost, accept_global_perms=False), pk=pk)
 
-        if request.user.groups.filter(name='Author').exists() and blog_post.author != request.user:
-            return redirect('blogposts')
-        
         form = BlogPostForm(instance=blog_post)
        
         context = {
@@ -135,10 +133,7 @@ class EditBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'dashboard/edit_blogpost.html', context)
     
     def post(self, request, pk):
-        blog_post = get_object_or_404(BlogPost, pk=pk)
-
-        if request.user.groups.filter(name='Author').exists() and blog_post.author != request.user:
-            return redirect('blogposts')
+        blog_post = get_object_or_404(get_objects_for_user(request.user, 'blog.change_blogpost', BlogPost, accept_global_perms=False), pk=pk)
 
         form = BlogPostForm(request.POST, request.FILES, instance=blog_post)
         if form.is_valid():
@@ -154,7 +149,7 @@ class EditBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
 class DeleteBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'blog.delete_blogpost'
     def post(self, request, pk):
-        blog_post = get_object_or_404(BlogPost, pk=pk)
+        blog_post = get_object_or_404(get_objects_for_user(request.user, 'blog.delete_blogpost', accept_global_perms=True), pk=pk)
         blog_post.delete()
         return redirect('blogposts')
 
