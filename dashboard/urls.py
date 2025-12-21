@@ -27,8 +27,12 @@ urlpatterns = [
     path('blogposts/edit/<int:pk>/', EditBlogPostView.as_view(), name='edit_blogpost'),
     path('blogposts/delete/<int:pk>/', DeleteBlogPostView.as_view(), name='delete_blogpost'),
 
+    path('my_blogposts/', BlogPostsView.as_view(), name='my_blogposts'),
+
     path('users/', UserManagementView.as_view(), name='user_management'),
     path('users/add/', AddUserView.as_view(), name='add_user'),
     path('users/edit/<int:pk>/', EditUserView.as_view(), name='edit_user'),
     path('users/delete/<int:pk>/', DeleteUserView.as_view(), name='delete_user'),
+
+
 ]

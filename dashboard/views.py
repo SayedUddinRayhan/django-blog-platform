@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from blog.models import Category, BlogPost
 from django.contrib.auth.models import User
 from .forms import CategoryForm, BlogPostForm, DashboardAddUserForm, DashboardUserEditForm
-
+from django.http import HttpResponseForbidden
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
@@ -63,6 +63,9 @@ class EditCategoryView(LoginRequiredMixin, PermissionRequiredMixin, View):
     
     def post(self, request, pk):
         category = get_object_or_404(Category, pk=pk)
+        if not request.user.has_perm('blog.change_blogpost', blog_post):
+            return HttpResponseForbidden()
+
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
@@ -88,7 +91,37 @@ class BlogPostsView(LoginRequiredMixin, View):
             'posts': posts,
         }
         return render(request, 'dashboard/blogposts.html', context)
+
+
+class BlogPostsView(LoginRequiredMixin, View):
+    def get(self, request):
+        url_name = request.resolver_match.url_name
+
+        # My Blogs → Author / Editor
+        if url_name == 'my_blogposts':
+            if not request.user.has_perm('blog.add_blogpost'):
+                return HttpResponseForbidden()
+
+            posts = BlogPost.objects.filter(author=request.user)
+
+        # All Blogs → Editor / Admin
+        else:
+            if not request.user.has_perm('blog.view_blogpost'):
+                return HttpResponseForbidden()
+
+            posts = get_objects_for_user(request.user, 'blog.view_blogpost', BlogPost, accept_global_perms=True)
+
+        context = {
+            'posts': posts,
+        }
+        return render(request, 'dashboard/blogposts.html', context)
     
+      
+
+     
+
+
+
 class AddBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'blog.add_blogpost'
     def get(self, request):
