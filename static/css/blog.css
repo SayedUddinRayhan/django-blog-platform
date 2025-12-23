@@ -61,3 +61,24 @@ h1, h2, h3, h4, h5, h6 {
   padding: 2rem;
 }
 
+
+/* Dark mode alerts */
+body[data-bs-theme="dark"] .alert-success {
+    background-color: #155724;
+    color: #d4edda;
+}
+
+body[data-bs-theme="dark"] .alert-danger {
+    background-color: #721c24;
+    color: #f8d7da;
+}
+
+body[data-bs-theme="dark"] .alert-warning {
+    background-color: #856404;
+    color: #fff3cd;
+}
+
+body[data-bs-theme="dark"] .alert-info {
+    background-color: #0c5460;
+    color: #d1ecf1;
+}

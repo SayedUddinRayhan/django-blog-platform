@@ -18,7 +18,7 @@ class Category(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='posts')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     featured_image = models.ImageField(upload_to='blog_images/%Y/%m%d', blank=True, null=True)
     short_description = models.TextField(max_length=500)

@@ -35,6 +35,45 @@
     </style>
   </head>
   <body>
+
+    {% comment %} # Jekono error message show korbe {% endcomment %}
+    {% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+    {% if message.tags == 'success' %}
+      <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> <!-- Bootstrap icon -->
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% elif message.tags == 'error' or message.tags == 'danger' %}
+      <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% elif message.tags == 'warning' %}
+      <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-circle-fill me-2"></i>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% elif message.tags == 'info' %}
+      <div class="alert alert-info alert-dismissible fade show d-flex align-items-center" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% else %}
+      <div class="alert alert-secondary alert-dismissible fade show d-flex align-items-center" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
     <!-- Mode Toggle SVGs -->
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
       <!-- your previous symbols here -->
@@ -148,6 +187,12 @@
       <p class="mb-0"><a href="#">Back to top</a></p>
     </footer>
 
+
+    <script>
+    setTimeout(() => {
+      document.querySelectorAll('.alert-success, .alert-info').forEach(el => el.remove());
+    }, 4000);
+  </script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
   </body>
 </html>

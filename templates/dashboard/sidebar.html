@@ -31,7 +31,7 @@
         {% if perms.blog.change_blogpost %}
         <li class="nav-item">
           <a href="{% url 'all_blogposts' %}"
-             class="nav-link link-body-emphasis {% if request.resolver_match.url_name == 'blogposts' %}active fw-semibold{% endif %}">
+             class="nav-link link-body-emphasis {% if request.resolver_match.url_name == 'all_blogposts' %}active fw-semibold{% endif %}">
             All Blogs
           </a>
         </li>

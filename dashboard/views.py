@@ -6,6 +6,7 @@ from blog.models import Category, BlogPost
 from django.contrib.auth.models import User
 from .forms import CategoryForm, BlogPostForm, DashboardAddUserForm, DashboardUserEditForm
 from django.http import HttpResponseForbidden
+from django.contrib import messages
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
@@ -80,7 +81,13 @@ class DeleteCategoryView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'blog.delete_category'
     def post(self, request, pk):
         category = get_object_or_404(Category, pk=pk)
-        category.delete()
+
+        try:
+            category.delete()
+            messages.success(request, 'Category deleted successfully.')
+        except:
+            messages.error(request, 'This category is associated with a blog post. You cannot delete this category.')
+        
         return redirect('categories')
 
 class MyBlogPostsView(LoginRequiredMixin, View):
@@ -123,8 +130,9 @@ class AddBlogPostView(LoginRequiredMixin, PermissionRequiredMixin, View):
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
             blog_post = form.save(commit=False) 
-            blog_post.author = request.user      
+            blog_post.author = request.user   
             blog_post.save()
+            messages.success(request, 'Blog post added successfully.')
 
 
             if request.user.groups.filter(name='Author').exists():
@@ -159,6 +167,7 @@ class EditBlogPostView(LoginRequiredMixin, View):
         form = BlogPostForm(request.POST, request.FILES, instance=blog_post)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Blog post updated successfully.')
             return redirect('my_blogposts')
         
         context = {
@@ -171,6 +180,7 @@ class DeleteBlogPostView(LoginRequiredMixin, View):
     def post(self, request, pk):
         blog_post = get_object_or_404(get_objects_for_user(request.user, 'blog.delete_blogpost', BlogPost, accept_global_perms=True), pk=pk)
         blog_post.delete()
+        messages.success(request, 'Blog post deleted successfully.')
 
         if not request.user.has_perm('blog.delete_blogpost'):
             return redirect('my_blogposts')
@@ -202,6 +212,7 @@ class AddUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
         form = DashboardAddUserForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'User added successfully.')
             return redirect('user_management')
         
         context = {
@@ -228,6 +239,7 @@ class EditUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
         form = DashboardUserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            messages.success(request, 'User updated successfully.')
             return redirect('user_management')
         
         context = {
@@ -241,4 +253,5 @@ class DeleteUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         user.delete()
+        messages.success(request, 'User deleted successfully.')
         return redirect('user_management')
