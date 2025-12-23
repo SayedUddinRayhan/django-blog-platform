@@ -10,19 +10,37 @@ from django.contrib import messages
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
-        context = {
-            'total_categories': Category.objects.count(),
-            'total_posts': BlogPost.objects.count(),
-            'published_posts': BlogPost.objects.filter(status='published').count(),
-        }
 
         if request.user.has_perm('auth.view_user'):
-            context['total_users'] = User.objects.count()
+            total_users = User.objects.count()
+            total_categories = Category.objects.count()
+            total_posts = BlogPost.objects.count()
+            total_published_posts = BlogPost.objects.filter(status='published').count()
+            
+            context = {
+                'total_users': total_users,
+                'total_categories': total_categories,
+                'total_posts': total_posts,
+                'total_published_posts': total_published_posts,
+            }
+        
+        else:
+            total_categories = Category.objects.filter(posts__author=request.user).distinct().count()
+            total_posts = BlogPost.objects.filter(author=request.user).count()
+            total_published_posts = BlogPost.objects.filter(author=request.user, status='published').count()
+
+            context = {
+                'total_categories': total_categories,
+                'total_posts': total_posts,
+                'total_published_posts': total_published_posts,
+            }   
+
 
         return render(request, 'dashboard/dashboard.html', context)
     
 class CategoriesView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'blog.view_category'
+
     def get(self, request):
         # Context Processor theke categories niye aschi, tai ekhane ar lagbe na
         return render(request, 'dashboard/categories.html')
