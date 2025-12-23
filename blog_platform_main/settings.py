@@ -111,6 +111,8 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',    
 )
 
+USE_GUARDIAN_PERMISSIONS = True
+
 
 
 # Internationalization

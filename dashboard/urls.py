@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     DashboardView, 
     CategoriesView, 
-    BlogPostsView, 
+    MyBlogPostsView,
+    AllBlogPostsView,
     AddCategoryView, 
     EditCategoryView, 
     DeleteCategoryView, 
@@ -21,13 +22,12 @@ urlpatterns = [
     path('categories/', CategoriesView.as_view(), name='categories'),
     path('categories/add/', AddCategoryView.as_view(), name='add_category'),
     path('categories/edit/<int:pk>/', EditCategoryView.as_view(), name='edit_category'),
+    path('my_blogposts/', MyBlogPostsView.as_view(), name='my_blogposts'),
     path('categories/delete/<int:pk>/', DeleteCategoryView.as_view(), name='delete_category'),
-    path('blogposts/', BlogPostsView.as_view(), name='blogposts'),
+    path('blogposts/', AllBlogPostsView.as_view(), name='blogposts'),
     path('blogposts/add/', AddBlogPostView.as_view(), name='add_blogpost'),
     path('blogposts/edit/<int:pk>/', EditBlogPostView.as_view(), name='edit_blogpost'),
     path('blogposts/delete/<int:pk>/', DeleteBlogPostView.as_view(), name='delete_blogpost'),
-
-    path('my_blogposts/', BlogPostsView.as_view(), name='my_blogposts'),
 
     path('users/', UserManagementView.as_view(), name='user_management'),
     path('users/add/', AddUserView.as_view(), name='add_user'),

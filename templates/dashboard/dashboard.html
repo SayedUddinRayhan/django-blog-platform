@@ -18,6 +18,17 @@
     <!-- Stats -->
     <div class="row g-3">
 
+      {% if request.user.is_superuser or perms.auth.view_user %}
+        <div class="col-md-4 col-lg-6">
+        <div class="card shadow-sm rounded-3">
+          <div class="card-body text-center">
+            <h6 class="text-muted">Users</h6>
+            <h3 class="fw-bold">{{ total_users }}</h3>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
       <div class="col-md-4 col-lg-6">
         <div class="card shadow-sm rounded-3">
           <div class="card-body text-center">

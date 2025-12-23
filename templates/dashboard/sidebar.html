@@ -17,8 +17,8 @@
         </li>
         {% endif %}
 
-       <!-- My Blogs (Author / Editor with object perms) -->
-        {% if perms.blog.add_blogpost %}
+       <!-- My Blogs -->
+        {% if perms.blog.add_blogpost or perms.blog.change_blogpost %}
         <li class="nav-item">
           <a href="{% url 'my_blogposts' %}"
              class="nav-link link-body-emphasis {% if request.resolver_match.url_name == 'my_blogposts' %}active fw-semibold{% endif %}">
@@ -28,7 +28,7 @@
         {% endif %} 
 
         <!-- All Blogs (Editor / Admin) -->
-        {% if perms.blog.view_blogpost %}
+        {% if perms.blog.change_blogpost %}
         <li class="nav-item">
           <a href="{% url 'blogposts' %}"
              class="nav-link link-body-emphasis {% if request.resolver_match.url_name == 'blogposts' %}active fw-semibold{% endif %}">
