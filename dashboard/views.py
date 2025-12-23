@@ -171,7 +171,10 @@ class DeleteBlogPostView(LoginRequiredMixin, View):
     def post(self, request, pk):
         blog_post = get_object_or_404(get_objects_for_user(request.user, 'blog.delete_blogpost', BlogPost, accept_global_perms=True), pk=pk)
         blog_post.delete()
-        return redirect('my_blogposts')
+
+        if not request.user.has_perm('blog.delete_blogpost'):
+            return redirect('my_blogposts')
+        return redirect('all_blogposts')
 
 
 class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, View):
