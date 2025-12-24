@@ -11,12 +11,18 @@ class HomeView(View):
         posts = BlogPost.objects.filter(is_featured=False, status='published').order_by('-updated_at')
         about_infoQ = About.objects.first()
         follow_usQ = FollowUs.objects.all()
+
+        paginator = Paginator(posts, 4)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
             # 'categories': categoriesQ,
             'featured_posts': featured_postsQ,
             'posts': posts,
             'about_info': about_infoQ,
             'follow_us': follow_usQ,
+            'page_obj': page_obj,
         }
 
         return render(request, 'home.html', context)

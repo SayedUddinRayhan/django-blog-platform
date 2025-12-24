@@ -8,9 +8,8 @@
       {% if forloop.first %}
         <!-- Hero Post -->
         {% if post.featured_image %}
-          <div class="p-4 p-md-5 mb-4 rounded position-relative"
-              style="background-image: url('{{ post.featured_image.url }}');
-                      background-size: cover; background-position: center; min-height: 320px;">
+          <div class="p-4 p-md-5 mb-4 rounded position-relative overflow-hidden" style="min-height: 320px;">
+            <img src="{{ post.featured_image.url }}" class="w-100 position-absolute top-0 start-0" style="object-fit: cover; object-position: center center;">
             <div class="position-absolute top-0 start-0 w-100 h-100 rounded"
                 style="background: rgba(0,0,0,0.45); backdrop-filter: blur(3px);"></div>
             <div class="col-lg-7 px-0 position-relative text-white" style="z-index:5;">
@@ -36,7 +35,7 @@
   {% endif %}
   <!-- Featured Posts -->
   <h2 class="fw-bold mb-4" style="font-size:1.8rem;">Featured Posts</h2>
-  <div style="width:60px; height:3px; background:#0d6efd; border-radius:5px; margin-top:-12px; margin-bottom:20px;"></div>
+  <div style="width:60px; height:4px; background:#0d6efd; border-radius:5px; margin-top:-12px; margin-bottom:20px;"></div>
   <div class="row mb-2">
     {% if featured_posts %}
         {% for post in featured_posts %}
@@ -62,14 +61,53 @@
   <h2 class="fw-bold mb-4" style="font-size:1.8rem;">Recent Articles</h2>
   <div class="row g-5">
     <div class="col-md-8">
-      {% if posts %}
-        {% for post in posts %}
+      {% if page_obj %}
+        {% for post in page_obj %}
           <article class="blog-post mb-4">
             <h3 class="blog-post-title mb-1"><a href="{% url 'blogpost_detail' slug=post.slug %}">{{ post.title }}</a></h3>
             <p class="blog-post-meta">{{ post.created_at|date:"F j, Y" }} by {{ post.author }}</p>
             <p>{{ post.short_description|truncatewords:100 }}</p>
           </article>
         {% endfor %}
+        {% comment %} Pagination {% endcomment %}
+        <nav aria-label="Page navigation" class="my-5">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; First</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled"><span class="page-link">&laquo; Previous</span></li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled"><span class="page-link">Next &raquo;</span></li>
+            {% endif %}
+          </ul>
+        </nav>
+
       {% else %}
         <p>No recent posts available.</p>
       {% endif %}

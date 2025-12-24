@@ -186,7 +186,7 @@ class EditBlogPostView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
             messages.success(request, 'Blog post updated successfully.')
-            return redirect('my_blogposts')
+            return redirect('home')
         
         context = {
             'form': form,
