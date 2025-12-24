@@ -4,11 +4,27 @@ from django.utils.text import slugify
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = "Categories"
+        ordering = ["name"]  # optional but professional
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name)
+            slug = base_slug
+            count = 1
+
+            while Category.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{count}"
+                count += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -35,7 +51,7 @@ class BlogPost(models.Model):
             slug = base_slug
             count = 1
 
-            while BlogPost.objects.filter(slug=slug).exists():
+            while BlogPost.objects.filter(slug=slug).exclude(pk=self.pk).exists():
                 slug = f"{base_slug}-{count}"
                 count += 1
 

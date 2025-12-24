@@ -172,7 +172,7 @@
       <div class="nav-scroller py-1 mb-3 border-bottom">
         <nav class="nav nav-underline justify-content-between">
           {% for cat in categories %}
-            <a class="nav-item nav-link {% if category and cat.id == category.id %}active{% endif %}" href="{% url 'category_view' cat.id %}">{{ cat.name }}</a>
+            <a class="nav-item nav-link {% if category and cat.slug == category.slug %}active{% endif %}" href="{% url 'category_view' cat.slug %}">{{ cat.name }}</a>
           {% endfor %}
         </nav>
       </div>

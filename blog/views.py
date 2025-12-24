@@ -23,7 +23,7 @@ class HomeView(View):
     
 
 class CategoryView(View):
-    def get(self, request, category_id):
+    def get(self, request, slug):
 
         # category_id = Category.objects.get(id=category_id)
         # category = get_object_or_404(Category, id=category_id)
@@ -33,7 +33,7 @@ class CategoryView(View):
         # except Category.DoesNotExist:
         #     return redirect('home')
         
-        category = get_object_or_404(Category, id=category_id)
+        category = get_object_or_404(Category, slug=slug)
 
         # I have created a context processor to get all categories
         # categoriesQ = Category.objects.all()

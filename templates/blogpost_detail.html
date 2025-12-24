@@ -26,7 +26,7 @@
         Published by <strong>{{ post.author.get_full_name|default:post.author.username }}</strong> on <span class="fw-semibold">{{ post.created_at|date:"F d, Y" }}</span>
 
         {% if post.category %}
-        in <a href="{% url 'category_view' post.category.id %}" class="fw-semibold text-decoration-none">
+        in <a href="{% url 'category_view' post.category.slug %}" class="fw-semibold text-decoration-none">
             {{ post.category.name }}
         </a>
         {% endif %}

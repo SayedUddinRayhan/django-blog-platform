@@ -3,6 +3,9 @@ from django.contrib import admin
 from .models import Category, BlogPost, About, FollowUs
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
+
 # For BlogPost Slug field prepopulation
 class BlogPostAdmin(GuardedModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
@@ -37,7 +40,7 @@ class AboutAdmin(admin.ModelAdmin):
     list_display = ('about_heading', 'updated_at')
 
 
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(About, AboutAdmin)
 admin.site.register(FollowUs)
