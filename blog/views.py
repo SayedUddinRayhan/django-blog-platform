@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from .models import Category, BlogPost, About, FollowUs
+from .models import Category, BlogPost, About, FollowUs, Comment
 from django.db.models import Q
 from django.core.paginator import Paginator
 from .forms import CommentForm
+from django.contrib import messages
 class HomeView(View):
     def get(self, request):
         # I have created a context processor to get all categories
@@ -58,10 +59,14 @@ class BlogPostDetailView(View):
     def get(self, request, slug):
         post = get_object_or_404(BlogPost, slug=slug, status='published')
         form = CommentForm()
-        
+        comments = post.comments.filter(active=True, parent__isnull=True).select_related('author').prefetch_related('replies')
+        total_comments = post.comments.filter(active=True).count()
+
         context = {
             'post': post,
             'form': form,
+            'comments': comments,
+            'total_comments': total_comments
         }
         return render(request, 'blogpost_detail.html', context)
     
@@ -72,12 +77,22 @@ class BlogPostDetailView(View):
             comment = form.save(commit=False)
             comment.blog_post = post
             comment.author = request.user
+
+            # Repies
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                comment.parent = Comment.objects.get(id=parent_id)
+
             comment.save()
+            messages.success(request, 'Comment added successfully.')
+
             return redirect('blogpost_detail', slug=post.slug)
         
+        comments = post.comments.filter(active=True, parent__isnull=True)
         context = {
             'post': post,
             'form': form,
+            'comments': comments
         }
         return render(request, 'blogpost_detail.html', context)
 

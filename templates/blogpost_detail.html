@@ -8,140 +8,173 @@
 <div class="row justify-content-center">
   <div class="col-lg-12">
 
-    <!-- Featured Image -->
     {% if post.featured_image %}
-      <div class="featured-img-wrapper mb-4 rounded-4 shadow" 
-        style="width: 100%; height: 320px; overflow: hidden; position: relative;">
-        <img src="{{ post.featured_image.url }}" 
-        alt="{{ post.title }}" 
-        style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+      <div class="featured-img-wrapper mb-4 rounded-4 shadow"
+           style="width:100%;height:320px;overflow:hidden;">
+        <img src="{{ post.featured_image.url }}"
+             alt="{{ post.title }}"
+             style="width:100%;height:100%;object-fit:cover;">
       </div>
     {% endif %}
 
-    <!-- Post Header -->
     <header class="mb-4 pb-3 border-bottom">
-      <h1 class="display-5 fw-bold mb-3 text-body-emphasis">
-        {{ post.title }}
-      </h1>
+      <h1 class="display-5 fw-bold">{{ post.title }}</h1>
 
       <div class="text-muted small">
-        Published by <strong>{{ post.author.get_full_name|default:post.author.username }}</strong> on <span class="fw-semibold">{{ post.created_at|date:"F d, Y" }}</span>
+        By <strong>{{ post.author.get_full_name|default:post.author.username }}</strong>
+        · {{ post.created_at|date:"F d, Y" }}
 
         {% if post.category %}
-        in <a href="{% url 'category_view' post.category.slug %}" class="fw-semibold text-decoration-none">
-            {{ post.category.name }}
-        </a>
+          · <a href="{% url 'category_view' post.category.slug %}">
+              {{ post.category.name }}
+            </a>
         {% endif %}
-
       </div>
 
       {% if post.short_description %}
-      <p class="lead mt-4 text-secondary" style="text-align: justify; text-justify: inter-word;">{{ post.short_description|safe }}</p>
+        <p class="lead mt-3 text-secondary">{{ post.short_description|safe }}</p>
       {% endif %}
     </header>
 
-    <!-- Blog Content -->
-    <div class="blog-content fs-5 lh-lg" style="text-align: justify; text-justify: inter-word;">
+    <div class="fs-5 lh-lg">
       {{ post.blog_body|safe }}
     </div>
 
-    <!-- Comments Section -->
+    <!-- COMMENTS -->
     <section class="mt-5 pt-4 border-top">
-
       <h3 class="mb-4">
-        Comments
-        <span class="text-muted fs-6">
-          ({{ post.comments.count }})
-        </span>
+        Comments <span class="text-muted">({{ total_comments }})</span>
       </h3>
 
-      {% if post.comments.exists %}
-        <div class="comment-list">
+      {% if comments %}
+        {% for comment in comments %}
+          <article class="mb-4 pb-3 border-bottom">
 
-          {% for comment in post.comments.all %}
-            <article class="d-flex gap-3 mb-4 pb-3 border-bottom">
-
-              <!-- Avatar -->
-              <div class="flex-shrink-0">
-                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
-                    style="width: 42px; height: 42px; font-weight: 600;">
-                  {{ comment.author.username|first|upper }}
-                </div>
+            <div class="d-flex gap-3">
+              <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
+                   style="width:42px;height:42px;">
+                {{ comment.author.username|first|upper }}
               </div>
 
-              <!-- Comment Content -->
-              <div class="flex-grow-1">
+             <div class="flex-grow-1">
 
-                <div class="d-flex justify-content-between align-items-center mb-1">
+              <!-- HEADER ROW -->
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ comment.author.get_full_name|default:comment.author.username }}</strong>
+                  <small class="text-muted">
+                    · {{ comment.created_at|date:"M d, Y · h:i A" }}
+                  </small>
+                </div>
+
+                {% if user.is_authenticated %}
+                  <div class="small text-nowrap">
+                    {% if comment.author == user %}
+                      <a href="#" class="text-decoration-none me-2">Edit</a>
+                      <a href="#" class="text-danger text-decoration-none">Delete</a>
+                    {% elif user.is_staff %}
+                      <a href="#" class="text-danger text-decoration-none">Remove</a>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- COMMENT BODY -->
+              <p class="mt-2 mb-1">{{ comment.comment }}</p>
+
+              {% if user.is_authenticated %}
+                <a href="#"
+                  class="reply-toggle text-decoration-none small"
+                  data-id="{{ comment.id }}">
+                  Reply
+                </a>
+              {% endif %}
+            </div>
+
+            </div>
+
+            <!-- REPLY FORM -->
+            {% if user.is_authenticated %}
+              <form method="POST"
+                    class="reply-form ms-5 mt-2 d-none"
+                    id="reply-form-{{ comment.id }}">
+                {% csrf_token %}
+                {{ form.comment }}
+                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                <button class="btn btn-sm btn-primary mt-2">Reply</button>
+              </form>
+            {% endif %}
+
+            <!-- REPLIES -->
+            {% for reply in comment.replies.all %}
+              <div class="ms-5 mt-3 border-start ps-3">
+
+                <!-- HEADER ROW -->
+                <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <strong class="me-2">
-                      {{ comment.author.get_full_name|default:comment.author.username }}
-                    </strong>
-                    <span class="text-muted small">
-                      {{ comment.created_at|date:"M d, Y · h:i A" }}
-                    </span>
+                    <strong>{{ reply.author.username }}</strong>
+                    <small class="text-muted">
+                      · {{ reply.created_at|date:"M d, Y · h:i A" }}
+                    </small>
                   </div>
 
-                  {% if comment.author == request.user %}
-                    <div class="small">
-                      <a href="#" class="text-decoration-none me-2">
-                        Edit
-                      </a>
-                      <a href="#" class="text-danger text-decoration-none">
-                        Delete
-                      </a>
+                  {% if user.is_authenticated %}
+                    <div class="small text-nowrap">
+                      {% if reply.author == user %}
+                        <a href="#" class="text-decoration-none me-2">Edit</a>
+                        <form method="POST" action="#" class="d-inline">
+                          {% csrf_token %}
+                          <button class="btn btn-sm text-danger p-0">
+                            Delete
+                          </button>
+                        </form>
+                      {% elif user.is_staff %}
+                        <form method="POST" action="#" class="d-inline">
+                          {% csrf_token %}
+                          <button class="btn btn-link btn-sm text-danger p-0">
+                            Remove
+                          </button>
+                        </form>
+                      {% endif %}
                     </div>
                   {% endif %}
                 </div>
 
-                <p class="mb-0 text-body-secondary" style="white-space: pre-line;">
-                  {{ comment.comment }}
-                </p>
-
+                <!-- REPLY BODY -->
+                <p class="mb-0 mt-1">{{ reply.comment }}</p>
               </div>
-            </article>
-          {% endfor %}
 
-        </div>
+                
+              </div>
+            {% endfor %}
+
+          </article>
+        {% endfor %}
       {% else %}
-        <p class="text-muted fst-italic">
-          No comments yet.
-        </p>
+        <p class="text-muted fst-italic">No comments yet.</p>
       {% endif %}
 
-      <!-- Add Comment -->
-      <section class="mt-5">
-        <h4 class="mb-3">Leave a Comment</h4>
+      <!-- ADD COMMENT -->
+      <div class="mt-5">
+        <h4>Leave a Comment</h4>
 
         {% if user.is_authenticated %}
           <form method="POST" class="card shadow-sm border-0">
             <div class="card-body">
               {% csrf_token %}
-              {{ form | crispy }}
-
-              <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary px-4">
-                  Post Comment
-                </button>
+              {{ form|crispy }}
+              <div class="text-end">
+                <button class="btn btn-primary px-4">Post Comment</button>
               </div>
             </div>
           </form>
         {% else %}
           <div class="alert alert-light border">
-            You must
-            <a href="{% url 'login' %}" class="fw-semibold">
-              log in
-            </a>
-            to post a comment.
+            Please <a href="{% url 'login' %}">log in</a> to comment.
           </div>
         {% endif %}
-      </section>
-
+      </div>
     </section>
-
-
-  
-
 
     <!-- Bottom Navigation -->
     <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
@@ -162,6 +195,18 @@
     </div>
   </br>
 
+
   </div>
 </div>
+
+<!-- JS: toggle reply -->
+<script>
+  document.querySelectorAll('.reply-toggle').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const id = btn.dataset.id;
+      document.getElementById(`reply-form-${id}`).classList.toggle('d-none');
+    });
+  });
+</script>
 {% endblock %}
