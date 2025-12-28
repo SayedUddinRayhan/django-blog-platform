@@ -5,6 +5,8 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from .forms import CommentForm
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 class HomeView(View):
     def get(self, request):
         # I have created a context processor to get all categories
@@ -123,3 +125,37 @@ class SearchView(View):
         }
         return render(request, 'search_results.html', context)
     
+
+class EditCommentView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+
+        if comment.author != request.user and not request.user.is_staff:
+            return redirect('blogpost_detail', slug=comment.blog_post.slug)
+
+        form = CommentForm(instance=comment)
+
+        context = {
+            'form': form,
+            'comment': comment
+        }
+
+        return render(request, 'edit_comment.html', context)
+
+    def post(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+
+        if comment.author != request.user and not request.user.is_staff:
+            return redirect('blogpost_detail', slug=comment.blog_post.slug)
+
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('blogpost_detail', slug=comment.blog_post.slug)
+        
+        context = {
+            'form': form,
+            'comment': comment
+        }
+
+        return render(request, 'edit_comment.html', context)
