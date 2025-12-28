@@ -85,3 +85,16 @@ class FollowUs(models.Model):
 
     def __str__(self):
         return self.platform_name
+    
+
+class Comment(models.Model):
+    blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+
+    def __str__(self):
+        return f"Comment by {self.author.username} on {self.blog_post.title}"

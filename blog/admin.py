@@ -1,6 +1,6 @@
 from guardian.admin import GuardedModelAdmin
 from django.contrib import admin
-from .models import Category, BlogPost, About, FollowUs
+from .models import Category, BlogPost, About, FollowUs, Comment
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -40,7 +40,12 @@ class AboutAdmin(admin.ModelAdmin):
     list_display = ('about_heading', 'updated_at')
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('blog_post', 'author', 'comment', 'created_at', 'active')
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(About, AboutAdmin)
 admin.site.register(FollowUs)
+admin.site.register(Comment, CommentAdmin)

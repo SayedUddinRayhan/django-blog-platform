@@ -15,7 +15,7 @@
             <p>{{ post.short_description|truncatewords:100 }}</p>
           </article>
         {% endfor %}
-        {% comment %} Pagination with Search Query Support {% endcomment %}
+        {% comment %} Pagination {% endcomment %}
         <nav aria-label="Page navigation" class="my-5">
                 <ul class="pagination justify-content-center">
                     {% if page_obj.has_previous %}

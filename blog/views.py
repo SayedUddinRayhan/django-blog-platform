@@ -3,6 +3,7 @@ from django.views import View
 from .models import Category, BlogPost, About, FollowUs
 from django.db.models import Q
 from django.core.paginator import Paginator
+from .forms import CommentForm
 class HomeView(View):
     def get(self, request):
         # I have created a context processor to get all categories
@@ -56,11 +57,31 @@ class CategoryView(View):
 class BlogPostDetailView(View):
     def get(self, request, slug):
         post = get_object_or_404(BlogPost, slug=slug, status='published')
-
+        form = CommentForm()
+        
         context = {
             'post': post,
+            'form': form,
         }
         return render(request, 'blogpost_detail.html', context)
+    
+    def post(self, request, slug):
+        post = get_object_or_404(BlogPost, slug=slug, status='published')
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.blog_post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('blogpost_detail', slug=post.slug)
+        
+        context = {
+            'post': post,
+            'form': form,
+        }
+        return render(request, 'blogpost_detail.html', context)
+
+        
     
 class SearchView(View):
     def get(self, request):
@@ -86,3 +107,4 @@ class SearchView(View):
             'page_obj': page_obj
         }
         return render(request, 'search_results.html', context)
+    

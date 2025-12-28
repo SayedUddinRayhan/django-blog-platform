@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
+
 {% block title %}{{ post.title }} | The Sayed Blog{% endblock %}
 
 {% block content %}
@@ -42,6 +44,103 @@
     <div class="blog-content fs-5 lh-lg" style="text-align: justify; text-justify: inter-word;">
       {{ post.blog_body|safe }}
     </div>
+
+    <!-- Comments Section -->
+    <section class="mt-5 pt-4 border-top">
+
+      <h3 class="mb-4">
+        Comments
+        <span class="text-muted fs-6">
+          ({{ post.comments.count }})
+        </span>
+      </h3>
+
+      {% if post.comments.exists %}
+        <div class="comment-list">
+
+          {% for comment in post.comments.all %}
+            <article class="d-flex gap-3 mb-4 pb-3 border-bottom">
+
+              <!-- Avatar -->
+              <div class="flex-shrink-0">
+                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
+                    style="width: 42px; height: 42px; font-weight: 600;">
+                  {{ comment.author.username|first|upper }}
+                </div>
+              </div>
+
+              <!-- Comment Content -->
+              <div class="flex-grow-1">
+
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <div>
+                    <strong class="me-2">
+                      {{ comment.author.get_full_name|default:comment.author.username }}
+                    </strong>
+                    <span class="text-muted small">
+                      {{ comment.created_at|date:"M d, Y · h:i A" }}
+                    </span>
+                  </div>
+
+                  {% if comment.author == request.user %}
+                    <div class="small">
+                      <a href="#" class="text-decoration-none me-2">
+                        Edit
+                      </a>
+                      <a href="#" class="text-danger text-decoration-none">
+                        Delete
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <p class="mb-0 text-body-secondary" style="white-space: pre-line;">
+                  {{ comment.comment }}
+                </p>
+
+              </div>
+            </article>
+          {% endfor %}
+
+        </div>
+      {% else %}
+        <p class="text-muted fst-italic">
+          No comments yet.
+        </p>
+      {% endif %}
+
+      <!-- Add Comment -->
+      <section class="mt-5">
+        <h4 class="mb-3">Leave a Comment</h4>
+
+        {% if user.is_authenticated %}
+          <form method="POST" class="card shadow-sm border-0">
+            <div class="card-body">
+              {% csrf_token %}
+              {{ form | crispy }}
+
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary px-4">
+                  Post Comment
+                </button>
+              </div>
+            </div>
+          </form>
+        {% else %}
+          <div class="alert alert-light border">
+            You must
+            <a href="{% url 'login' %}" class="fw-semibold">
+              log in
+            </a>
+            to post a comment.
+          </div>
+        {% endif %}
+      </section>
+
+    </section>
+
+
+  
 
 
     <!-- Bottom Navigation -->
