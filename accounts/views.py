@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class RegisterView(View):
     def get(self, request):
@@ -54,12 +55,12 @@ class LoginView(View):
         }
         return render(request, "accounts/login.html", context)
     
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin,View):
     def get(self, request):
         logout(request)
         return redirect("home")
     
-class ProfileUpdateView(View):
+class ProfileUpdateView(LoginRequiredMixin, View):
     def get(self, request):
         form = ProfileUpdateForm(instance=request.user)
 
@@ -82,7 +83,7 @@ class ProfileUpdateView(View):
 
         return render(request, "accounts/profile.html", context)
     
-class CustomPasswordChangeView(PasswordChangeView):
+class CustomPasswordChangeView( LoginRequiredMixin, PasswordChangeView):
     template_name = "accounts/password_change.html"
     success_url = reverse_lazy("profile")
 
@@ -90,3 +91,6 @@ class CustomPasswordChangeView(PasswordChangeView):
         response = super().form_valid(form)
         messages.success(self.request, "Your password has been changed successfully.")
         return response
+    def form_invalid(self, form):
+        messages.error(self.request, "Please correct the errors below.")
+        return super().form_invalid(form)
