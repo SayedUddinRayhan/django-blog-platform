@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import RegisterForm
+from .forms import RegisterForm, ProfileUpdateForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
+from django.contrib import messages
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
 
 class RegisterView(View):
     def get(self, request):
@@ -55,3 +58,35 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect("home")
+    
+class ProfileUpdateView(View):
+    def get(self, request):
+        form = ProfileUpdateForm(instance=request.user)
+
+        context = {
+            'form': form
+        }
+        
+        return render(request, "accounts/profile.html", context)
+    
+    def post(self, request):
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully.")
+            return redirect("profile")
+        
+        context = {
+            'form': form
+        }
+
+        return render(request, "accounts/profile.html", context)
+    
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = "accounts/password_change.html"
+    success_url = reverse_lazy("profile")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Your password has been changed successfully.")
+        return response

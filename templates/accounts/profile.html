@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile | The Sayed Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <!-- Profile Update Card -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0 text-center">Update Profile</h4>
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Password Change Card -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0 text-center">Change Password</h4>
+      </div>
+      <div class="card-body">
+        <p class="mb-3">
+          You can change your password here.
+        </p>
+        <a href="{% url 'password_change' %}" class="btn btn-warning w-100">
+          Change Password
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
