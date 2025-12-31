@@ -62,7 +62,10 @@ class BlogPostDetailView(View):
         post = get_object_or_404(BlogPost, slug=slug, status='published')
         form = CommentForm()
         comments = post.comments.filter(active=True, parent__isnull=True).select_related('author').prefetch_related('replies')
-        total_comments = post.comments.filter(active=True).count()
+        total_comments = 0
+        for comment in comments:
+            total_comments += 1
+            total_comments += comment.replies.filter(active=True).count()
 
         context = {
             'post': post,
@@ -159,3 +162,17 @@ class EditCommentView(LoginRequiredMixin, View):
         }
 
         return render(request, 'edit_comment.html', context)
+    
+class DeleteCommentView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+
+        if comment.author != request.user and not request.user.is_staff:
+            messages.error(request, 'You do not have permission to remove this comment.')
+            return redirect('blogpost_detail', slug=comment.blog_post.slug)
+
+        comment.active = False
+        comment.save()
+        messages.success(request, 'Comment removed successfully.')
+        return redirect('blogpost_detail', slug=comment.blog_post.slug)
+

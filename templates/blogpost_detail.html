@@ -62,20 +62,38 @@
               <div>
                 <strong>{{ comment.author.get_full_name|default:comment.author.username }}</strong>
                 <small class="text-muted">
-                  · {{ comment.created_at|date:"M d, Y · h:i A" }}
+                  · {{ comment.created_at|timesince }} ago
                 </small>
               </div>
 
               {% if user.is_authenticated %}
                 <div class="small text-nowrap">
                   {% if comment.author == user %}
-                    <a href="#"
+                    <a href="{% url 'edit_comment' comment.id %}"
                        class="text-decoration-none me-2 edit-toggle"
                        data-id="{{ comment.id }}">
                       Edit
                     </a>
+                    <form method="POST"
+                          action="{% url 'delete_comment' comment.id %}"
+                          class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit"
+                              class="btn btn-link p-0 text-danger text-decoration-none" onclick="return confirm('Are you sure you want to remove this comment?');">
+                        Remove
+                      </button>
+                    </form>
+
                   {% elif user.is_staff %}
-                    <a href="#" class="text-danger text-decoration-none">Remove</a>
+                    <form method="POST"
+                          action="{% url 'delete_comment' comment.id %}"
+                          class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit"
+                              class="btn btn-link p-0 text-danger text-decoration-none" onclick="return confirm('Are you sure you want to remove this comment?');">
+                        Remove
+                      </button>
+                    </form>
                   {% endif %}
                 </div>
               {% endif %}
@@ -132,21 +150,103 @@
         </form>
         {% endif %}
 
-        <!-- REPLIES -->
+       <!-- REPLIES -->
         {% for reply in comment.replies.all %}
-        <div class="ms-5 mt-3 border-start ps-3">
-          <strong>{{ reply.author.get_full_name|default:reply.author.username }}</strong>
-          <small class="text-muted">
-            · {{ reply.created_at|date:"M d, Y · h:i A" }}
-          </small>
-          <p class="mb-0 mt-1">{{ reply.comment }}</p>
-        </div>
-        {% endfor %}
+         {% if reply.active %}
 
-      </article>
-      {% empty %}
-        <p class="text-muted fst-italic">No comments yet.</p>
+          <div class="ms-5 mt-4 ps-3 border-start">
+
+            <div class="d-flex align-items-start gap-3">
+
+              <!-- Avatar -->
+              <div class="rounded-circle bg-secondary text-white fw-semibold
+                          d-flex align-items-center justify-content-center"
+                  style="width:42px; height:42px;">
+                {{ reply.author.get_full_name|default:reply.author.username|slice:":1"|upper }}
+              </div>
+
+              <!-- Reply Content -->
+              <div class="flex-grow-1">
+
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>
+                      {{ reply.author.get_full_name|default:reply.author.username }}
+                    </strong>
+                    <small class="text-muted ms-2">
+                      {{ reply.created_at|timesince }} ago
+                    </small>
+                  </div>
+
+                  {% if user.is_authenticated %}
+                    <div class="small">
+                      {% if reply.author == user %}
+                        <a href="#"
+                          class="text-decoration-none me-2 reply-edit-toggle"
+                          data-id="{{ reply.id }}">
+                          Edit
+                        </a>
+                        <form method="POST" action="{% url 'delete_comment' reply.id %}" class="d-inline">
+                          {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-link p-0 text-danger text-decoration-none" onclick="return confirm('Are you sure you want to remove this comment?');">
+                              Remove
+                            </button>
+                         </form>
+    
+                      {% elif user.is_staff %}
+                        <form method="POST"
+                          action="{% url 'delete_comment' reply.id %}"
+                          class="d-inline">
+                          {% csrf_token %}
+                          <button type="submit"
+                                  class="btn btn-link p-0 text-danger text-decoration-none" onclick="return confirm('Are you sure you want to remove this comment?');">
+                            Remove
+                          </button>
+                        </form>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <!-- Reply Text -->
+                <p class="mb-0 mt-1" id="reply-text-{{ reply.id }}">
+                  {{ reply.comment }}
+                </p>
+
+                <!-- Reply Edit Form (Hidden) -->
+                {% if reply.author == user %}
+                <form method="POST"
+                      action="{% url 'edit_comment' reply.id %}"
+                      class="d-none mt-2"
+                      id="reply-edit-form-{{ reply.id }}">
+                  {% csrf_token %}
+
+                  <textarea name="comment"
+                            class="form-control mb-2"
+                            rows="3">{{ reply.comment }}</textarea>
+
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-primary">Update</button>
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary cancel-reply-edit"
+                            data-id="{{ reply.id }}">
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+         
+
       {% endfor %}
+
 
       <!-- ADD COMMENT -->
       <div class="mt-5">
@@ -170,37 +270,78 @@
       </div>
     </section>
 
+     
+
   </div>
+  <!-- Bottom Navigation -->
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-3 pt-4 border-top">
+      <a href="{% url 'home' %}" class="btn btn-outline-secondary d-flex align-items-center px-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+             class="bi bi-arrow-left me-2" fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 
+                0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 
+                0 0 0 15 8z"/>
+        </svg>
+        Back to Home
+      </a>
+    </div>
 </div>
 
-<!-- JS -->
-<script>
-  // Toggle reply
+  <!-- JS -->
+ <script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Toggle reply form
   document.querySelectorAll('.reply-toggle').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
-      document.getElementById(`reply-form-${btn.dataset.id}`)
-        .classList.toggle('d-none');
+      const form = document.getElementById(`reply-form-${btn.dataset.id}`);
+      if (form) form.classList.toggle('d-none');
     });
   });
 
-  // Toggle edit
+  // Toggle comment edit
   document.querySelectorAll('.edit-toggle').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
       const id = btn.dataset.id;
-      document.getElementById(`comment-text-${id}`).classList.add('d-none');
-      document.getElementById(`edit-form-${id}`).classList.remove('d-none');
+      document.getElementById(`comment-text-${id}`)?.classList.add('d-none');
+      document.getElementById(`edit-form-${id}`)?.classList.remove('d-none');
     });
   });
 
-  // Cancel edit
+  // Cancel comment edit
   document.querySelectorAll('.cancel-edit').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
-      document.getElementById(`edit-form-${id}`).classList.add('d-none');
-      document.getElementById(`comment-text-${id}`).classList.remove('d-none');
+      document.getElementById(`edit-form-${id}`)?.classList.add('d-none');
+      document.getElementById(`comment-text-${id}`)?.classList.remove('d-none');
     });
   });
+
+  // Toggle reply edit
+  document.querySelectorAll('.reply-edit-toggle').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const id = btn.dataset.id;
+      document.getElementById(`reply-text-${id}`)?.classList.add('d-none');
+      document.getElementById(`reply-edit-form-${id}`)?.classList.remove('d-none');
+    });
+  });
+
+  // Cancel reply edit
+  document.querySelectorAll('.cancel-reply-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      document.getElementById(`reply-edit-form-${id}`)?.classList.add('d-none');
+      document.getElementById(`reply-text-${id}`)?.classList.remove('d-none');
+    });
+  });
+
+});
 </script>
+
+
+
 {% endblock %}

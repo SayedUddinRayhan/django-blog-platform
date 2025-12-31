@@ -34,3 +34,6 @@ staticfiles/
 # Environment variables
 .env
 *.env
+
+
+templates/blogpost_detail_backup.html
