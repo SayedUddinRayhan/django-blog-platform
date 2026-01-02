@@ -1,33 +1,60 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}Edit Blog Post{% endblock %}
+
+{% block title %}Edit User{% endblock %}
 
 {% block content %}
 <div class="row g-4 mb-4">
-    {% include 'dashboard/sidebar.html' %}
-        <!-- Main Content -->
-        <div class="col-md-9 col-lg-10">
 
-            <h4 class="mb-4">Edit User</h4>
-            <div class="card shadow-sm">
-                <div class="card-body">
+  {% include 'dashboard/sidebar.html' %}
 
-                    <form action="{% url 'edit_user' user_obj.pk %}" method="POST">
-                        {% csrf_token %}
-                        {{ form | crispy }}
+  <!-- Main Content -->
+  <section class="col-md-9 col-lg-10">
 
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">
-                            Update
-                            </button>
+    <!-- Page Header -->
+    <div class="mb-4">
+      <h2 class="fw-semibold mb-1">Edit User</h2>
+      <p class="text-muted mb-0">Update the details of the user below.</p>
+    </div>
 
-                            <a href="{% url 'user_management' %}" class="btn btn-outline-secondary">
-                            Cancel
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <!-- Form Card -->
+    <div class="card shadow-sm rounded-3 form-card mx-auto">
+      <div class="card-body">
+
+        <form action="{% url 'edit_user' user_obj.pk %}" method="POST" novalidate>
+          {% csrf_token %}
+          {{ form | crispy }}
+
+          <!-- Actions -->
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <button type="submit" class="btn btn-primary">
+              Update
+            </button>
+
+            <a href="{% url 'user_management' %}" class="btn btn-outline-secondary">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </section>
 </div>
+
+<!-- Optional CSS for form card -->
+<style>
+  /* Center and limit width on all screens */
+  .form-card {
+    max-width: 520px;
+    width: 100%;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 576px) {
+    .form-card {
+      padding: 1rem;
+    }
+  }
+</style>
 {% endblock %}

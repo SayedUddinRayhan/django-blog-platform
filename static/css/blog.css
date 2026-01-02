@@ -82,3 +82,82 @@ body[data-bs-theme="dark"] .alert-info {
     background-color: #0c5460;
     color: #d1ecf1;
 }
+
+
+.nav-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.25rem;
+}
+
+.nav-scroller .nav::-webkit-scrollbar {
+  display: none;
+}
+
+
+.table td {
+  word-break: break-word;
+}
+
+
+.blog-header-logo {
+  line-height: 1.25;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Mobile fine-tuning */
+@media (max-width: 575.98px) {
+  .blog-header-logo {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+}
+
+
+
+/* Mobile */
+@media (max-width: 768px) {
+  .blog-header-logo {
+    font-size: 1.6rem;
+  }
+
+  .hero-content,
+  .position-relative.text-white {
+    padding: 1.25rem;
+  }
+
+  footer p {
+    font-size: 0.9rem;
+  }
+}
+
+
+
+
+
+
+/* Responsive adjustments for <576px */
+@media (max-width: 575.98px) {
+  /* Reduce left margin on replies */
+  .reply-form, 
+  .replies .border-start {
+    margin-left: 1rem !important;
+    padding-left: 0.5rem !important;
+  }
+
+  /* Optional: reduce featured image height */
+  .featured-img-wrapper {
+    height: 200px !important;
+  }
+
+  /* Prevent long words/links from causing horizontal scroll */
+  .fs-5, .blog-post, .blog-post p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
+

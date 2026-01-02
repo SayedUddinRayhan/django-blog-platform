@@ -1,36 +1,59 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+
 {% block title %}Add Blog Post{% endblock %}
 
 {% block content %}
 <div class="row g-4 mb-4">
+
     {% include 'dashboard/sidebar.html' %}
-        <!-- Main Content -->
-        <div class="col-md-9 col-lg-10">
 
-            <h4 class="mb-4">Add New Blog Post</h4>
+    <!-- Main Content -->
+    <section class="col-md-9 col-lg-10">
 
-            <div class="card shadow-sm">
-                <div class="card-body">
-
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form | crispy }}
-
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">
-                            Create
-                            </button>
-
-                            <a href="{% url 'my_blogposts' %}" class="btn btn-outline-secondary">
-                            Cancel
-                            </a>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-
+        <!-- Page Header -->
+        <div class="mb-4">
+            <h2 class="fw-semibold mb-1">Add New Blog Post</h2>
+            <p class="text-muted mb-0">Fill in the details to create a new blog post.</p>
         </div>
+
+        <!-- Form Card -->
+        <div class="card shadow-sm rounded-3 form-card mx-auto">
+            <div class="card-body">
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+
+                    <!-- Actions -->
+                    <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            Create
+                        </button>
+
+                        <a href="{% url 'my_blogposts' %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </section>
 </div>
+
+<!-- Optional CSS for responsive card -->
+<style>
+    .form-card {
+        max-width: 700px;
+        width: 100%;
+    }
+
+    @media (max-width: 576px) {
+        .form-card {
+            padding: 1rem;
+        }
+    }
+</style>
 {% endblock %}

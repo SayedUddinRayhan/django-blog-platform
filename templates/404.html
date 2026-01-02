@@ -1,67 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found - 404</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found - 404</title>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #f6f7f8;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f6f7f8;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 1rem; /* ensures spacing on small screens */
+    }
 
-        .container {
-            padding: 20px;
-        }
+    .container {
+      padding: 20px;
+      max-width: 480px;
+      width: 100%;
+    }
 
-        h1 {
-            font-size: 80px;
-            margin: 0;
-            color: #2c3e50;
-        }
+    h1 {
+      font-size: 8rem;
+      margin: 0;
+      color: #2c3e50;
+      line-height: 1;
+    }
 
-        h3 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            color: #555;
-        }
+    h3 {
+      font-size: 1.8rem;
+      margin: 15px 0 20px;
+      color: #555;
+    }
 
-        p {
-            font-size: 16px;
-            color: #777;
-        }
+    p {
+      font-size: 1rem;
+      color: #777;
+      margin-bottom: 20px;
+    }
 
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 28px;
-            background: #2c3e50;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-        }
+    a {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 28px;
+      background: #2c3e50;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
 
-        a:hover {
-            background: #1b2836;
-        }
-    </style>
+    a:hover {
+      background: #1b2836;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 6rem;
+      }
+      h3 {
+        font-size: 1.5rem;
+      }
+      p {
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      h1 {
+        font-size: 4.5rem;
+      }
+      h3 {
+        font-size: 1.25rem;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+      a {
+        padding: 10px 22px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>404</h1>
-        <h3>Page Not Found</h3>
-        <p>The page you're looking for doesn't exist or may have been removed.</p>
-        <a href="{% url 'home' %}">Return to Home</a>
-    </div>
+  <div class="container">
+    <h1>404</h1>
+    <h3>Page Not Found</h3>
+    <p>The page you're looking for doesn't exist or may have been removed.</p>
+    <a href="{% url 'home' %}">Return to Home</a>
+  </div>
 </body>
 </html>

@@ -1,36 +1,46 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block title %}Login{% endblock %}
+
 {% block content %}
 
-
 <div class="row justify-content-center py-5">
-    <div class="col-md-6 col-lg-5">
+    <div class="col-11 col-sm-10 col-md-8 col-lg-5">
 
         <div class="p-4 p-md-5 rounded-4 shadow-lg bg-body">
-            <h2 class="fw-bold mb-4 text-center fs-3">Login</h2>
+
+            <!-- Page Title -->
+            <h2 class="fw-bold fs-3 mb-4 text-center">Login</h2>
+
+            <!-- Login Form -->
             <form method="post" novalidate>
                 {% csrf_token %}
-                {{ form | crispy }}
-                <button type="submit" class="btn btn-primary mt-3 w-100">Login</button>
+                {{ form|crispy }}
+
+                <button type="submit" class="btn btn-primary mt-3 w-100 py-2 fw-semibold">
+                    Login
+                </button>
             </form>
-            <p class="text-center mt-3">
+
+            <!-- Forgot Password -->
+            <p class="text-center mt-3 mb-1">
                 <a href="{% url 'password_reset' %}" class="text-decoration-none">
                     Forgot your password?
                 </a>
             </p>
 
-
-            <p class="text-center mt-3 mb-0">
+            <!-- Register Link -->
+            <p class="text-center mt-2 mb-0">
                 Don't have an account?
-                <a href="{% url 'register' %}" class="text-decoration-none">
+                <a href="{% url 'register' %}" class="text-decoration-none fw-semibold">
                     Register
                 </a>
             </p>
+
         </div>
 
     </div>
 </div>
-
 
 {% endblock %}

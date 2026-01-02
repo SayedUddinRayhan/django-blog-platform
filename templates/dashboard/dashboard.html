@@ -4,10 +4,11 @@
 {% block content %}
 <div class="row g-4 mb-4">
 
+  <!-- Sidebar -->
   {% include 'dashboard/sidebar.html' %}
 
   <!-- Main Content -->
-  <section class="col-md-9 col-lg-10">
+  <section class="col-12 col-md-9 col-lg-10">
     <div class="mb-4">
       <h2 class="fw-semibold">Dashboard</h2>
       <p class="text-muted mb-0">
@@ -19,7 +20,7 @@
     <div class="row g-3">
 
       {% if request.user.is_superuser or perms.auth.view_user %}
-        <div class="col-md-4 col-lg-6">
+      <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm rounded-3">
           <div class="card-body text-center">
             <h6 class="text-muted">Users</h6>
@@ -29,7 +30,7 @@
       </div>
       {% endif %}
 
-      <div class="col-md-4 col-lg-6">
+      <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm rounded-3">
           <div class="card-body text-center">
             <h6 class="text-muted">Categories</h6>
@@ -38,7 +39,7 @@
         </div>
       </div>
 
-      <div class="col-md-4 col-lg-6">
+      <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm rounded-3">
           <div class="card-body text-center">
             <h6 class="text-muted">Blog Posts</h6>
@@ -47,7 +48,7 @@
         </div>
       </div>
 
-      <div class="col-md-4 col-lg-6">
+      <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm rounded-3">
           <div class="card-body text-center">
             <h6 class="text-muted">Published</h6>
@@ -56,11 +57,7 @@
         </div>
       </div>
 
-
-
     </div>
-
-   
 
   </section>
 </div>

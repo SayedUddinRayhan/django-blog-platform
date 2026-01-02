@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block title %}Register{% endblock %}
+
 {% block content %}
-
 <div class="row justify-content-center py-5">
-    <div class="col-md-6 col-lg-5">
+    <div class="col-11 col-sm-10 col-md-8 col-lg-5">
 
-        <div class="p-4 p-md-5 rounded-4 shadow-lg bg-body">
-            <h2 class="fw-bold mb-4 text-center fs-3">Register</h2>
+        <div class="p-4 p-md-5 rounded-4 shadow-lg bg-body border">
+            <!-- Heading -->
+            <h2 class="fw-bold mb-4 text-center fs-3">Create an Account</h2>
 
+            <!-- Registration Form -->
             <form action="{% url 'register' %}" method="post" novalidate>
                 {% csrf_token %}
                 {{ form|crispy }}
@@ -18,10 +21,13 @@
                 </button>
             </form>
 
+            <!-- Separator -->
+            <hr class="my-4">
+
             <!-- Login Link -->
-            <p class="text-center mt-3 mb-0">
+            <p class="text-center mb-0 small text-muted">
                 Already have an account?
-                <a href="{% url 'login' %}" class="text-decoration-none">
+                <a href="{% url 'login' %}" class="text-decoration-none fw-medium">
                     Login
                 </a>
             </p>
@@ -29,5 +35,4 @@
 
     </div>
 </div>
-
 {% endblock %}
