@@ -120,7 +120,7 @@
 
             <form action="{% url 'search' %}" method="get" class="d-flex align-items-center">
               <input type="text" name="keyword" class="form-control form-control-sm rounded-3" style="max-width:180px;"
-                    placeholder="Search..." value="{{ search_query }}" style="width: 180px;">
+                    placeholder="Search..." value="{{ search_query }}" style="width: 180px;" aria-label="Search blog" required>
               <button class="btn btn-link link-secondary" type="submit" aria-label="Search">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
                   stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -185,7 +185,6 @@
 
     <footer class="py-4 py-md-5 text-center text-body-secondary bg-body-tertiary">
       <p>© 2025. This blog project built by <a href="#">Md Sayed Uddin</a>.</p>
-      <p class="mb-0"><a href="#">Back to top</a></p>
     </footer>
 
 

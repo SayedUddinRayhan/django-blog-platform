@@ -105,7 +105,7 @@ class BlogPostDetailView(View):
     
 class SearchView(View):
     def get(self, request):
-        query = request.GET.get('keyword', '')
+        query = request.GET.get('keyword', '').strip()
         postsQ = BlogPost.objects.none()
 
         if query:
