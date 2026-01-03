@@ -30,6 +30,7 @@
       </div>
       {% endif %}
 
+      {% if request.user.is_superuser or perms.blog.add_category %}
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm rounded-3">
           <div class="card-body text-center">
@@ -38,6 +39,7 @@
           </div>
         </div>
       </div>
+      {% endif %}
 
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm rounded-3">

@@ -140,11 +140,13 @@
                   {{ user.get_full_name|default:user.username }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                  {% if user.is_authenticated and perms.blog.add_blogpost %}
                   <li>
                     <a class="dropdown-item" href="{% url 'dashboard' %}">
                       Dashboard
                     </a>
                   </li>
+                  {% endif %}
                   <li>
                     <a class="dropdown-item" href="{% url 'profile' %}">
                       Profile
@@ -170,13 +172,13 @@
 
 
       <!-- Dynamic Categories Nav -->
-      <div class="nav-scroller py-1 mb-3 border-bottom">
-        <nav class="nav nav-underline justify-content-between">
-          {% for cat in categories %}
-            <a class="nav-item nav-link {% if category and cat.slug == category.slug %}active{% endif %}" href="{% url 'category_view' cat.slug %}">{{ cat.name }}</a>
-          {% endfor %}
-        </nav>
-      </div>
+        <div class="nav-scroller py-1 mb-3 border-bottom">
+          <nav class="nav nav-underline justify-content-between">
+            {% for cat in categories %}
+              <a class="nav-item nav-link {% if category and cat.slug == category.slug %}active{% endif %}" href="{% url 'category_view' cat.slug %}">{{ cat.name }}</a>
+            {% endfor %}
+          </nav>
+        </div>
     </div>
 
     <main class="container">

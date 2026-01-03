@@ -9,7 +9,7 @@
 
       <ul class="nav flex-column gap-1">
 
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and perms.blog.add_blogpost %}
         <li class="nav-item">
           <a href="{% url 'dashboard' %}"
              class="nav-link link-body-emphasis {% if request.resolver_match.url_name == 'dashboard' %}active fw-semibold{% endif %}">
