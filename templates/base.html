@@ -118,18 +118,18 @@
 
           <div class="col-12 col-md-8 d-flex justify-content-center justify-content-md-end align-items-center gap-2 flex-wrap">
 
-            <form action="{% url 'search' %}" method="get" class="d-flex align-items-center">
-              <input type="text" name="keyword" class="form-control form-control-sm rounded-3" style="max-width:180px;"
-                    placeholder="Search..." value="{{ search_query }}" style="width: 180px;" aria-label="Search blog" required>
-              <button class="btn btn-link link-secondary" type="submit" aria-label="Search">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-                  stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  class="mx-2" role="img" viewBox="0 0 24 24">
-                  <circle cx="10.5" cy="10.5" r="7.5"></circle>
-                  <path d="M21 21l-5.2-5.2"></path>
-                </svg>
-              </button>
-            </form>
+             <form action="{% url 'search' %}" method="get" class="modern-search">
+                <span class="search-icon">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input
+                  type="search"
+                  name="keyword"
+                  placeholder="Search"
+                  value="{{ search_query }}"
+                  aria-label="Search blog"
+                  required>
+              </form>
 
             {% if user.is_authenticated %}
               <div class="dropdown">
