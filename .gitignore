@@ -36,4 +36,4 @@ staticfiles/
 *.env
 
 
-templates/blogpost_detail_backup.html
+screenshots/
