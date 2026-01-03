@@ -140,35 +140,16 @@
         </div>
 
         <!-- REPLY FORM -->
-        <div class="flex-grow-1">
         {% if user.is_authenticated %}
-            <form method="POST"
-                class="reply-form ms-2 ms-md-5 mt-3 d-none"
-                id="reply-form-{{ comment.id }}">
-
-            {% csrf_token %}
-
-            <div class="row g-2">
-              <div class="col-12">
-                <textarea name="comment"
-                          class="form-control reply-textarea"
-                          rows="3"
-                          placeholder="Write your reply..."
-                          required></textarea>
-              </div>
-
-              <div class="col-12 d-flex justify-content-end">
-                <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                <button type="submit" class="btn btn-sm btn-primary px-3">
-                  Reply
-                </button>
-              </div>
-            </div>
-
-          </form>
-
+        <form method="POST"
+              class="reply-form ms-2 ms-md-5 mt-2 d-none w-100"
+              id="reply-form-{{ comment.id }}">
+          {% csrf_token %}
+          {{ form.comment }}
+          <input type="hidden" name="parent_id" value="{{ comment.id }}">
+          <button class="btn btn-sm btn-primary mt-2">Reply</button>
+        </form>
         {% endif %}
-        </div>
 
        <!-- REPLIES -->
         {% for reply in comment.replies.all %}
